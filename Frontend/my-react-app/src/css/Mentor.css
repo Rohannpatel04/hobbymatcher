@@ -1,0 +1,105 @@
+/* Container for the whole mentor page */
+.mentor-container {
+  width: 80%;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Form Title Styling */
+h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+h3 {
+  color: #333;
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Styles for both Mentor and Hobbyist Forms */
+form {
+  margin-bottom: 30px;
+  border: 1px solid #ccc;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+form + form {
+  margin-top: 40px; /* Adds extra space between consecutive forms */
+}
+
+/* Form field styling */
+.form-field {
+  margin-bottom: 15px;
+}
+
+.form-label {
+  display: block;
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.form-input:focus {
+  border-color: #007bff;
+}
+
+/* Styling for buttons */
+.submit-button {
+  padding: 12px 25px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: block;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #0056b3;
+}
+
+/* Preview box styling */
+.preview-box {
+  background-color: #f4f4f4;
+  padding: 10px;
+  border: 1px solid #ccc;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: monospace;
+  margin-top: 20px;
+}
+
+/* Horizontal line styling between forms */
+hr {
+  margin: 30px 0;
+  border: 1px solid #ddd;
+  width: 100%;
+}
+
+/* Specific styles for the second form (Hobbyist Form) */
+.hobbyist-form {
+  background-color: #f9f9f9;
+}
+
+/* Add space between forms */
+.mentor-form {
+  margin-bottom: 30px;
+}
