@@ -1,4 +1,4 @@
-/* Container for the whole mentor page */
+/* Container for the whole Mentor Post page */
 .mentor-container {
   width: 80%;
   margin: 0 auto;
@@ -19,7 +19,7 @@ h3 {
   text-align: center;
 }
 
-/* Styles for both Mentor and Hobbyist Forms */
+/* Styles for both Post and Update Post Forms */
 form {
   margin-bottom: 30px;
   border: 1px solid #ccc;
@@ -29,7 +29,7 @@ form {
 }
 
 form + form {
-  margin-top: 40px; /* Adds extra space between consecutive forms */
+  margin-top: 40px;
 }
 
 /* Form field styling */
@@ -94,13 +94,13 @@ hr {
   width: 100%;
 }
 
-/* Specific styles for the second form (Hobbyist Form) */
-.hobbyist-form {
+/* Specific styles for the second form (Update Post Form) */
+.update-post-form {
   background-color: #f9f9f9;
 }
 
 /* Add space between forms */
-.mentor-form {
+.post-form {
   margin-bottom: 30px;
 }
 
@@ -109,31 +109,29 @@ hr {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px; /* Space between buttons */
+  gap: 10px;
 }
 
-/* Button styling */
 .nav-button {
   padding: 10px 20px;
-  background-color: #007bff; /* Primary blue */
+  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
-  text-decoration: none; /* Remove link underline */
+  text-decoration: none;
   text-align: center;
-  transition: background-color 0.3s ease; /* Smooth hover effect */
+  transition: background-color 0.3s ease;
 }
 
-/* Hover effect for buttons */
 .nav-button:hover {
-  background-color: #0056b3; /* Darker blue */
+  background-color: #0056b3;
 }
 
-/* Add responsive design for small screens */
+/* Responsive Design */
 @media (max-width: 600px) {
   .nav-button {
-    width: 100%; /* Full width for buttons on smaller screens */
+    width: 100%;
   }
 }

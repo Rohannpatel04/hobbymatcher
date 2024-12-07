@@ -1,0 +1,58 @@
+/* Container for hobbyist form */
+.hobbyist-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Adds space between each form */
+  align-items: center; /* Center horizontally */
+  justify-content: center; /* Center vertically */
+  height: 100vh; /* Takes up the full height of the viewport */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Form field styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Adds space between label, input, and button */
+  width: 100%;
+  max-width: 400px; /* Limits the width of the form */
+}
+
+/* Label styling */
+label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Input styling */
+input {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Button styling */
+button {
+  padding: 10px 20px;
+  background-color: #007bff; /* Blue button */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 100%; /* Makes the button full width */
+  margin-top: 10px; /* Adds space above buttons */
+}
+
+button:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Adjust spacing between forms */
+form + form {
+  margin-top: 20px; /* Adds space between consecutive forms */
+}

@@ -1,8 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import "../css/Mentor.css";
 
 function Mentor() {
-  // Mentor Form Data
+  // const baseUrl = "http://localhost:3000";
+  // MentorID Form Data
+  const [mentorIDData, setMentorIDData] = useState({
+    mentorID: "",
+  });
+  const [mentorResultData, setMentorResultData] = useState(null);
   const [mentorData, setMentorData] = useState({
     MentorID: "",
     name: "",
@@ -28,6 +35,27 @@ function Mentor() {
     name: "",
     phonenumber: "",
   });
+  useEffect(() => {
+    // Only fetch if mentorIDData.mentorID is not empty
+    if (mentorIDData.mentorID) {
+      const fetchMentorData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3000/mentorData/${mentorIDData.mentorID}`
+          );
+          if (!response.ok) {
+            throw new Error("Mentor not found");
+          }
+          const data = await response.json();
+          setMentorResultData(data); // Set the result data when the fetch is successful
+        } catch (error) {
+          console.error("Error fetching mentor data:", error.message);
+        }
+      };
+
+      fetchMentorData();
+    }
+  }, [mentorIDData.mentorID]); // Dependency on mentorIDData.mentorID
 
   // Handle Mentor Form Changes
   const handleMentorChange = (e) => {
@@ -56,6 +84,15 @@ function Mentor() {
     });
   };
 
+  // Handle MentorID Form Changes
+  const handleMentorIDChange = (e) => {
+    const { name, value } = e.target;
+    setMentorIDData({
+      ...mentorIDData,
+      [name]: value,
+    });
+  };
+
   // Handle Form Submissions
   const handleSubmit = (e, formType) => {
     e.preventDefault();
@@ -65,11 +102,28 @@ function Mentor() {
       console.log("Hobbyist Data Saved:", hobbyistData);
     } else if (formType === "deleteMentor") {
       console.log("Delete Mentor Data:", deleteMentorData);
+    } else if (formType === "mentorID") {
+      console.log("MentorID Data Saved:", mentorIDData);
     }
   };
 
   return (
     <div className="mentor-container">
+      <div className="navigation-buttons">
+        <Link to="/mentor/findhobbyist" className="nav-button">
+          Find Hobbyist
+        </Link>
+        <Link to="/mentor/requests" className="nav-button">
+          Mentor Requests
+        </Link>
+        <Link to="/mentor/post" className="nav-button">
+          Create Mentor Post
+        </Link>
+        <Link to="/mentor/events" className="nav-button">
+          Mentor Events
+        </Link>
+      </div>
+
       <h2>Create New Mentor</h2>
       {/* Mentor Form */}
       <form onSubmit={(e) => handleSubmit(e, "mentor")} className="mentor-form">
@@ -169,6 +223,38 @@ function Mentor() {
       <pre className="preview-box">
         {JSON.stringify(deleteMentorData, null, 2)}
       </pre>
+
+      <hr />
+
+      <h2>GET information with Mentor ID</h2>
+      {/* Mentor ID Form */}
+      <form
+        onSubmit={(e) => handleSubmit(e, "mentorID")}
+        className="mentor-id-form"
+      >
+        <div className="form-field">
+          <label htmlFor="mentorID" className="form-label">
+            Mentor ID:
+          </label>
+          <input
+            type="text"
+            id="mentorID"
+            name="mentorID"
+            value={mentorIDData.mentorID}
+            onChange={handleMentorIDChange}
+            className="form-input"
+          />
+        </div>
+        <button type="submit" className="submit-button">
+          Save Mentor ID
+        </button>
+      </form>
+      {mentorResultData && (
+        <div className="mentor-result">
+          <h3>Mentor Details:</h3>
+          <pre>{JSON.stringify(mentorResultData, null, 2)}</pre>
+        </div>
+      )}
     </div>
   );
 }
