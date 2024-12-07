@@ -6,9 +6,9 @@ const mentorRoutes = require('./routes/mentorRoutes'); // Importing mentor route
 app.use(express.json());
 
 // Use the routes
-app.use('/mentorData', mentorRoutes);
+app.use('/mentor', mentorRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
