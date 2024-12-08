@@ -8,6 +8,9 @@ function Home() {
       <Link to="/mentor">
         <button>Mentor</button>
       </Link>
+      <Link to="/hobbyist">
+        <button>Hobbyist</button>
+      </Link>
     </div>
   );
 }

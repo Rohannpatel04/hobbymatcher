@@ -16,6 +16,8 @@ router.get(
   "/findhobbyiestbyname/:fname/:lname",
   mentorController.retrieveHobbyiestByName
 );
+
+// TEST IT
 router.get(
   "/findhobbyiestbylocation/:location",
   mentorController.retrieveHobbyiestByLocation
@@ -26,6 +28,8 @@ router.get(
   "/findhobbyiestbyschool/:school",
   mentorController.retrieveHobbyiestBySchool
 );
+
+// TEST IT
 router.get(
   "/findhobbyiestbynamelocationschool/:fname/:lname/:location/:school",
   mentorController.retrieveHobbyiestByNameLocationSchool
@@ -43,6 +47,8 @@ router.get(
   "/retrivehobbyiestrequestbystatus/:fname/:lname/:phonenumber/:status",
   mentorController.retrieveHobbyistRequestsByStatus
 );
+
+// DONE
 router.get(
   "/updatehobbyiestrequest/:status/:requestid",
   mentorController.updateHobbyistRequestStatus
