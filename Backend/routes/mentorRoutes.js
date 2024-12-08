@@ -6,9 +6,9 @@ const mentorController = require('../controller/mentorController'); // Import th
 // router.get('/:mentorId', mentorController.getMentorByID);  // Using the controller's function for this endpoint
 
 // /mentor
-// router.post('/creatementor/', mentorController.createMentor); 
+router.post('/creatementor/', mentorController.createMentor); 
+router.post('/addmentorskill/', mentorController.addmentorSkill); 
 // router.delete('/deletementor/:fname/:lname/:phonenumber', mentorController.deleteMentor); 
-
 
 // /mentor/findhobbyiest 
 router.get('/findhobbyiestbyname/:fname/:lname', mentorController.retrieveHobbyiestByName); 
@@ -19,7 +19,7 @@ router.get('/findhobbyiestbynamelocationschool/:fname/:lname/:location/:school',
 // /mentor/request
 router.get('/retriveallhobbyiestrequest/:fname/:lname/:phonenumber', mentorController.retrieveAllHobbyistRequests); 
 router.get('/retrivehobbyiestrequestbystatus/:fname/:lname/:phonenumber/:status', mentorController.retrieveHobbyistRequestsByStatus); 
-router.get('/updatehobbyiestrequest/:status/:requestid', mentorController.updateHobbyistRequestStatus); 
+router.put('/updatehobbyiestrequest/:status/:requestid', mentorController.updateHobbyistRequestStatus); 
 
 // /mentor/post
 router.post('/createpost', mentorController.createPost);
@@ -32,4 +32,4 @@ router.get('/retrieveeventinfobyid/:eventid', mentorController.retrieveEventInfo
 router.get('/retrieveeventinfobyname/:eventname', mentorController.retrieveEventInformationByName);
 router.get('/retrieveallevents/:fname/:lname/:phonenumber', mentorController.retrieveAllEvents); 
 
-module.exports = router;  // Export the router for use in the server.js
+module.exports = router;
