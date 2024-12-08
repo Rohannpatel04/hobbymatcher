@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/MentorEvents.css";
 
 function MentorEvents() {
@@ -19,15 +19,103 @@ function MentorEvents() {
     attendanceID: "",
     role: "",
     eventID: "",
-    hobbyistID: "",
-    mentorID: "",
+    hobbyistID: null,
+    mentorID: null,
   });
 
-  // Mentor Contact Form Data
-  const [mentorData, setMentorData] = useState({
-    name: "",
-    phonenumber: "",
+  const [eventID, setEventID] = useState("");
+  const [eventIDresult, setEventIDResult] = useState(null);
+  useEffect(() => {
+    // Only fetch if 'school' is not empty or whitespace
+    if (eventID) {
+      const fetchMentorData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/mentor/retrieveeventinfobyid/${eventID}`
+          );
+          if (!response.ok) {
+            throw new Error("events not found");
+          }
+          const data = await response.json();
+          setEventIDResult(data); // Set the result data when the fetch is successful
+        } catch (error) {
+          console.error("Error fetching hobbyist data:", error.message);
+        }
+      };
+      fetchMentorData();
+    }
+  }, [eventID]);
+
+  const [personalInfo, setPersonalInfo] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
   });
+  const [eventAllresult, setEventAllResult] = useState(null);
+  useEffect(() => {
+    // Only fetch if 'school' is not empty or whitespace
+    if (
+      personalInfo.firstName &&
+      personalInfo.lastName &&
+      personalInfo.phoneNumber
+    ) {
+      const fetchMentorData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/mentor/retrieveallevents/${personalInfo.firstName}/${personalInfo.lastName}/${personalInfo.phoneNumber}`
+          );
+          if (!response.ok) {
+            throw new Error("events not found");
+          }
+          const data = await response.json();
+          setEventAllResult(data); // Set the result data when the fetch is successful
+        } catch (error) {
+          console.error("Error fetching event data:", error.message);
+        }
+      };
+      fetchMentorData();
+    }
+  }, [personalInfo.firstName, personalInfo.lastName, personalInfo.phoneNumber]);
+
+  const [eventName, setEventName] = useState("");
+  const [eventNameresult, setEventNameResult] = useState(null);
+  useEffect(() => {
+    // Only fetch if 'school' is not empty or whitespace
+    if (eventName) {
+      const fetchMentorData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/mentor/retrieveeventinfobyname/${eventName}`
+          );
+          if (!response.ok) {
+            throw new Error("events not found");
+          }
+          const data = await response.json();
+          setEventNameResult(data); // Set the result data when the fetch is successful
+        } catch (error) {
+          console.error("Error fetching event data:", error.message);
+        }
+      };
+      fetchMentorData();
+    }
+  }, [eventName]);
+
+  const handleEventIDChange = (e) => setEventID(e.target.value);
+  const handlePersonalInfoChange = (e) => {
+    const { name, value } = e.target;
+    setPersonalInfo((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  const handleEventNameChange = (e) => setEventName(e.target.value);
+
+  // Mentor Contact Form Data
+  // const [mentorData, setMentorData] = useState({
+  //   name: "",
+  //   phonenumber: "",
+  // });
 
   // Handle Event Form Changes
   const handleEventChange = (e) => {
@@ -57,12 +145,83 @@ function MentorEvents() {
   };
 
   // Handle Form Submissions
-  const handleSubmit = (e, formType) => {
+  const handleSubmit = async (e, formType) => {
     e.preventDefault();
     if (formType === "event") {
-      console.log("Event Data Saved:", eventData);
+      e.preventDefault();
+      try {
+        const response = await fetch(
+          "http://localhost:3001/mentor/createevent",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              eventId: eventData.eventID,
+              eventName: eventData.eventName,
+              startTime: eventData.startTime,
+              endTime: eventData.endTime,
+              location: eventData.location,
+              description: eventData.description,
+              date: eventData.date,
+              skillID: eventData.skillID,
+              // eventId: 800000048,
+              // eventName: eventData.role,
+              // startTime: eventData.startTime,
+              // endTime: eventData.endTime,
+              // location: eventData.location,
+              // description: eventData.description,
+              // date: eventData.date,
+              // skillID: eventData.skillID,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        alert("Event created successfully!");
+
+        // Clear form after successful submission
+      } catch (error) {
+        console.error("Error creating event:", error);
+        alert("Error creating event. Please try again.");
+      }
     } else if (formType === "attendance") {
-      console.log("Attendance Data Saved:", attendanceData);
+      e.preventDefault();
+      try {
+        const response = await fetch(
+          "http://localhost:3001/mentor/createeventattendence",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              attendanceID: attendanceData.attendanceID,
+              role: attendanceData.role,
+              hobbyistID: attendanceData.hobbyistID,
+              mentorID: attendanceData.mentorID,
+              eventID: attendanceData.eventID,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        alert("Attendance created successfully!");
+
+        // Clear form after successful submission
+      } catch (error) {
+        console.error("Error creating attendance:", error);
+        alert("Error creating attendance. Please try again.");
+      }
     } else if (formType === "mentor") {
       console.log("Mentor Data Saved:", mentorData);
     }
@@ -264,44 +423,172 @@ function MentorEvents() {
       <pre className="preview-box">
         {JSON.stringify(attendanceData, null, 2)}
       </pre>
-
       <hr />
 
-      {/* Mentor Contact Form */}
-      <h2>Mentor Contact</h2>
-      <form onSubmit={(e) => handleSubmit(e, "mentor")} className="mentor-form">
-        <div className="form-field">
-          <label htmlFor="name" className="form-label">
-            Mentor Name:
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={mentorData.name}
-            onChange={handleMentorChange}
-            className="form-input"
-          />
+      {/* event information done by eventID */}
+      <h2>Get event information by eventID</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Event ID:</label>
+          <input type="text" value={eventID} onChange={handleEventIDChange} />
         </div>
-        <div className="form-field">
-          <label htmlFor="phonenumber" className="form-label">
-            Mentor Phone Number:
-          </label>
-          <input
-            type="text"
-            id="phonenumber"
-            name="phonenumber"
-            value={mentorData.phonenumber}
-            onChange={handleMentorChange}
-            className="form-input"
-          />
-        </div>
-        <button type="submit" className="submit-button">
-          Save Mentor Data
-        </button>
+        <button type="submit">Submit Event ID</button>
       </form>
-      <h3>Mentor Preview:</h3>
-      <pre className="preview-box">{JSON.stringify(mentorData, null, 2)}</pre>
+      {eventIDresult ? (
+        <table className="mentor-result-table">
+          <thead>
+            <tr>
+              <th>Event ID</th>
+              <th>Event name</th>
+              <th>Event startime</th>
+              <th>Event endtime</th>
+              <th>Event location</th>
+              <th>Event Description</th>
+              <th>Attendance ID</th>
+              <th>Attendance Role</th>
+              <th>Attendance HobbyistID</th>
+              <th>Attendance MentorID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {eventIDresult.map((item, index) => (
+              <tr key={index}>
+                <td>{item.eventID}</td>
+                <td>{item.eventName}</td>
+                <td>{item.startTime}</td>
+                <td>{item.endTime}</td>
+                <td>{item.location}</td>
+                <td>{item.description}</td>
+                <td>{item.attendanceID}</td>
+                <td>{item.role}</td>
+                <td>{item.hobbyistID}</td>
+                <td>{item.mentorID}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No events found for this eventID.</p>
+      )}
+      <h2>
+        Get event information by inputing firstName, lastName, and phoneNumber
+        (FIX)
+      </h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>First Name:</label>
+          <input
+            type="text"
+            name="firstName"
+            value={personalInfo.firstName}
+            onChange={handlePersonalInfoChange}
+          />
+        </div>
+        <div>
+          <label>Last Name:</label>
+          <input
+            type="text"
+            name="lastName"
+            value={personalInfo.lastName}
+            onChange={handlePersonalInfoChange}
+          />
+        </div>
+        <div>
+          <label>Phone Number:</label>
+          <input
+            type="text"
+            name="phoneNumber"
+            value={personalInfo.phoneNumber}
+            onChange={handlePersonalInfoChange}
+          />
+        </div>
+        <button type="submit">Submit Personal Info</button>
+      </form>
+      {eventAllresult ? (
+        <table className="mentor-result-table">
+          <thead>
+            <tr>
+              <th>Event ID</th>
+              <th>Event name</th>
+              <th>Event startime</th>
+              <th>Event endtime</th>
+              <th>Event location</th>
+              <th>Event Description</th>
+              <th>Attendance ID</th>
+              <th>Attendance Role</th>
+              <th>Attendance HobbyistID</th>
+              <th>Attendance MentorID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {eventAllresult.map((item, index) => (
+              <tr key={index}>
+                <td>{item.eventID}</td>
+                <td>{item.eventName}</td>
+                <td>{item.startTime}</td>
+                <td>{item.endTime}</td>
+                <td>{item.location}</td>
+                <td>{item.description}</td>
+                <td>{item.attendanceID}</td>
+                <td>{item.role}</td>
+                <td>{item.hobbyistID}</td>
+                <td>{item.mentorID}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No events found for this phoneNumber, firstname, lastname.</p>
+      )}
+      {/* eventAllresult */}
+      <h2>Get event information by inputting event name</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>Event Name:</label>
+          <input
+            type="text"
+            value={eventName}
+            onChange={handleEventNameChange}
+          />
+        </div>
+        <button type="submit">Submit Event Name</button>
+      </form>
+      {eventNameresult ? (
+        <table className="mentor-result-table">
+          <thead>
+            <tr>
+              <th>Event ID</th>
+              <th>Event name</th>
+              <th>Event startime</th>
+              <th>Event endtime</th>
+              <th>Event location</th>
+              <th>Event Description</th>
+              <th>Attendance ID</th>
+              <th>Attendance Role</th>
+              <th>Attendance HobbyistID</th>
+              <th>Attendance MentorID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {eventNameresult.map((item, index) => (
+              <tr key={index}>
+                <td>{item.eventID}</td>
+                <td>{item.eventName}</td>
+                <td>{item.startTime}</td>
+                <td>{item.endTime}</td>
+                <td>{item.location}</td>
+                <td>{item.description}</td>
+                <td>{item.attendanceID}</td>
+                <td>{item.role}</td>
+                <td>{item.hobbyistID}</td>
+                <td>{item.mentorID}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No events found for this eventName.</p>
+      )}
     </div>
   );
 }

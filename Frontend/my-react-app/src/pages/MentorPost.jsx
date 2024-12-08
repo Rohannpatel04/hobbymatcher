@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../css/MentorPost.css";
 
 function MentorPost() {
@@ -8,11 +8,51 @@ function MentorPost() {
     content: "",
   });
 
-  // Update Post Form Data (Now with phoneNumber and name)
-  const [updatePostData, setUpdatePostData] = useState({
+  const [personalInfo, setPersonalInfo] = useState({
+    firstName: "",
+    lastName: "",
     phoneNumber: "",
-    name: "",
   });
+
+  const [postAllresult, setpostAllResult] = useState(null);
+
+  const handlePersonalInfoChange = (e) => {
+    const { name, value } = e.target; // Get the input name and value
+    setPersonalInfo((prevState) => ({
+      ...prevState, // Spread the previous state
+      [name]: value, // Update the specific field
+    }));
+  };
+  useEffect(() => {
+    // Only fetch if 'school' is not empty or whitespace
+    if (
+      personalInfo.firstName &&
+      personalInfo.lastName &&
+      personalInfo.phoneNumber
+    ) {
+      const fetchMentorData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/mentor/retrieveallpost/${personalInfo.firstName}/${personalInfo.lastName}/${personalInfo.phoneNumber}`
+          );
+          if (!response.ok) {
+            throw new Error("posts not found");
+          }
+          const data = await response.json();
+          setpostAllResult(data); // Set the result data when the fetch is successful
+        } catch (error) {
+          console.error("Error fetching post data:", error.message);
+        }
+      };
+      fetchMentorData();
+    }
+  }, [personalInfo.firstName, personalInfo.lastName, personalInfo.phoneNumber]);
+
+  // Update Post Form Data
+  // const [updatePostData, setUpdatePostData] = useState({
+  //   phoneNumber: "",
+  //   name: "",
+  // });
 
   // Handle Post Form Changes
   const handlePostChange = (e) => {
@@ -33,12 +73,38 @@ function MentorPost() {
   };
 
   // Handle Form Submissions
-  const handleSubmit = (e, formType) => {
+  const handleSubmit = async (e, formType) => {
     e.preventDefault();
+
     if (formType === "post") {
-      console.log("Post Data Saved:", postData);
-    } else if (formType === "updatePost") {
-      console.log("Updated Post Data Saved:", updatePostData);
+      try {
+        const response = await fetch(
+          "http://localhost:3001/mentor/createpost",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              postID: postData.postID,
+              postContent: postData.content,
+              mentorID: "200000002",
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        alert("Post created successfully!");
+
+        // Clear form after successful submission
+      } catch (error) {
+        console.error("Error creating post:", error);
+        alert("Error creating post. Please try again.");
+      }
     }
   };
 
@@ -58,6 +124,7 @@ function MentorPost() {
             value={postData.postID}
             onChange={handlePostChange}
             className="form-input"
+            required
           />
         </div>
         <div className="form-field">
@@ -71,6 +138,7 @@ function MentorPost() {
             onChange={handlePostChange}
             className="form-input"
             rows="4"
+            required
           />
         </div>
         <button type="submit" className="submit-button">
@@ -82,7 +150,59 @@ function MentorPost() {
 
       <hr />
 
-      {/* Update Post Form */}
+      <h2>Views all Posts</h2>
+      <form onSubmit={handleSubmit}>
+        <div>
+          <label>First Name:</label>
+          <input
+            type="text"
+            name="firstName" // Name for identifying the field
+            value={personalInfo.firstName}
+            onChange={handlePersonalInfoChange} // Handle change for first name
+          />
+
+          <label>Last Name:</label>
+          <input
+            type="text"
+            name="lastName" // Name for identifying the field
+            value={personalInfo.lastName}
+            onChange={handlePersonalInfoChange} // Handle change for last name
+          />
+
+          <label>Phone Number:</label>
+          <input
+            type="text"
+            name="phoneNumber" // Name for identifying the field
+            value={personalInfo.phoneNumber}
+            onChange={handlePersonalInfoChange} // Handle change for phone number
+          />
+        </div>
+        <button type="submit">Submit Information</button>
+      </form>
+      {/* <pre className="preview-box">{JSON.stringify(personalInfo, null, 2)}</pre> */}
+      {postAllresult ? (
+        <table className="mentor-result-table">
+          <thead>
+            <tr>
+              <th>Post ID</th>
+              <th>Post Content</th>
+              <th>Mentor ID</th>
+            </tr>
+          </thead>
+          <tbody>
+            {postAllresult.map((item, index) => (
+              <tr key={index}>
+                <td>{item.postID}</td>
+                <td>{item.postContent}</td>
+                <td>{item.mentorID}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p>No posts found for this information.</p>
+      )}
+      {/* Update Post Form
       <h2>Update Post Info</h2>
       <form
         onSubmit={(e) => handleSubmit(e, "updatePost")}
@@ -121,7 +241,7 @@ function MentorPost() {
       <h3>Updated Info Preview:</h3>
       <pre className="preview-box">
         {JSON.stringify(updatePostData, null, 2)}
-      </pre>
+      </pre> */}
     </div>
   );
 }

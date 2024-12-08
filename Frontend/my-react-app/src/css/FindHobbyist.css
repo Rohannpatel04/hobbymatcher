@@ -6,7 +6,9 @@
   align-items: center; /* Center horizontally */
   justify-content: center; /* Center vertically */
   height: 100vh; /* Takes up the full height of the viewport */
-  padding: 20px;
+  padding: 40px 20px 20px; /* Adds more space at the top (increased padding-top) */
+  padding-top: 200px;
+  padding-bottom: 100px;
   box-sizing: border-box;
 }
 
@@ -27,7 +29,7 @@ label {
 
 /* Input styling */
 input {
-  padding: 10px;
+  padding: 8px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
@@ -37,13 +39,13 @@ input {
 
 /* Button styling */
 button {
-  padding: 10px 20px;
+  padding: 8px 16px;
   background-color: #007bff; /* Blue button */
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   width: 100%; /* Makes the button full width */
   margin-top: 10px; /* Adds space above buttons */
 }
@@ -55,4 +57,52 @@ button:hover {
 /* Adjust spacing between forms */
 form + form {
   margin-top: 20px; /* Adds space between consecutive forms */
+}
+
+/* Table Header Styling */
+.mentor-result-table thead {
+  background-color: #007bff;
+  color: white;
+}
+
+.mentor-result-table th {
+  padding: 6px 8px;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 12px;
+  border: 1px solid #ddd;
+}
+
+/* Table Body Styling */
+.mentor-result-table tbody tr {
+  border-bottom: 1px solid #ddd;
+}
+
+.mentor-result-table tbody tr:nth-child(even) {
+  background-color: #f4f4f4; /* Alternate row colors */
+}
+
+.mentor-result-table td {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  font-size: 12px;
+}
+
+/* Move table further to the left but add padding to the left */
+.mentor-result-table {
+  padding-left: 20px; /* Adds padding to the left of the table */
+  margin-top: 20px; /* Adds space between table and form */
+}
+
+/* Responsive Design for Small Screens */
+@media (max-width: 600px) {
+  .mentor-result-table {
+    font-size: 10px; /* Smaller font size for mobile */
+    padding-left: 10px; /* Adjusts padding for mobile */
+  }
+
+  .mentor-result-table th,
+  .mentor-result-table td {
+    padding: 6px; /* Smaller padding for mobile */
+  }
 }

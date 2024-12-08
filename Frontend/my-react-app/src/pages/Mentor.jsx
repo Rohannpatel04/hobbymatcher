@@ -6,9 +6,9 @@ import "../css/Mentor.css";
 function Mentor() {
   // const baseUrl = "http://localhost:3000";
   // MentorID Form Data
-  const [mentorIDData, setMentorIDData] = useState({
-    mentorID: "",
-  });
+  // const [mentorIDData, setMentorIDData] = useState({
+  //   mentorID: "",
+  // });
   const [mentorResultData, setMentorResultData] = useState(null);
   const [mentorData, setMentorData] = useState({
     MentorID: "",
@@ -35,27 +35,27 @@ function Mentor() {
     name: "",
     phonenumber: "",
   });
-  useEffect(() => {
-    // Only fetch if mentorIDData.mentorID is not empty
-    if (mentorIDData.mentorID) {
-      const fetchMentorData = async () => {
-        try {
-          const response = await fetch(
-            `http://localhost:3000/mentorData/${mentorIDData.mentorID}`
-          );
-          if (!response.ok) {
-            throw new Error("Mentor not found");
-          }
-          const data = await response.json();
-          setMentorResultData(data); // Set the result data when the fetch is successful
-        } catch (error) {
-          console.error("Error fetching mentor data:", error.message);
-        }
-      };
+  // useEffect(() => {
+  //   // Only fetch if mentorIDData.mentorID is not empty
+  //   if (mentorIDData.mentorID) {
+  //     const fetchMentorData = async () => {
+  //       try {
+  //         const response = await fetch(
+  //           `http://localhost:3000/mentorData/${mentorIDData.mentorID}`
+  //         );
+  //         if (!response.ok) {
+  //           throw new Error("Mentor not found");
+  //         }
+  //         const data = await response.json();
+  //         setMentorResultData(data); // Set the result data when the fetch is successful
+  //       } catch (error) {
+  //         console.error("Error fetching mentor data:", error.message);
+  //       }
+  //     };
 
-      fetchMentorData();
-    }
-  }, [mentorIDData.mentorID]); // Dependency on mentorIDData.mentorID
+  //     fetchMentorData();
+  //   }
+  // }, [mentorIDData.mentorID]); // Dependency on mentorIDData.mentorID
 
   // Handle Mentor Form Changes
   const handleMentorChange = (e) => {
@@ -85,13 +85,13 @@ function Mentor() {
   };
 
   // Handle MentorID Form Changes
-  const handleMentorIDChange = (e) => {
-    const { name, value } = e.target;
-    setMentorIDData({
-      ...mentorIDData,
-      [name]: value,
-    });
-  };
+  // const handleMentorIDChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setMentorIDData({
+  //     ...mentorIDData,
+  //     [name]: value,
+  //   });
+  // };
 
   // Handle Form Submissions
   const handleSubmit = (e, formType) => {
@@ -102,8 +102,6 @@ function Mentor() {
       console.log("Hobbyist Data Saved:", hobbyistData);
     } else if (formType === "deleteMentor") {
       console.log("Delete Mentor Data:", deleteMentorData);
-    } else if (formType === "mentorID") {
-      console.log("MentorID Data Saved:", mentorIDData);
     }
   };
 
@@ -226,9 +224,9 @@ function Mentor() {
 
       <hr />
 
-      <h2>GET information with Mentor ID</h2>
+      {/* <h2>GET information with Mentor ID</h2> */}
       {/* Mentor ID Form */}
-      <form
+      {/* <form
         onSubmit={(e) => handleSubmit(e, "mentorID")}
         className="mentor-id-form"
       >
@@ -248,13 +246,13 @@ function Mentor() {
         <button type="submit" className="submit-button">
           Save Mentor ID
         </button>
-      </form>
-      {mentorResultData && (
+      </form> */}
+      {/* {mentorResultData && (
         <div className="mentor-result">
           <h3>Mentor Details:</h3>
           <pre>{JSON.stringify(mentorResultData, null, 2)}</pre>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
