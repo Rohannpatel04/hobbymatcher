@@ -1,6 +1,6 @@
 const express = require('express');
-const router = express.Router();  // Creates an instance of the router
-const mentorController = require('../controller/mentorController'); // Import the mentor controller
+const router = express.Router(); 
+const mentorController = require('../controller/mentorController'); 
 
 // Define the route to get a mentor by ID
 // router.get('/:mentorId', mentorController.getMentorByID);  // Using the controller's function for this endpoint
