@@ -1,50 +1,101 @@
 const db = require("../db"); // Import the database connection
-// const getMentorByID = async (req, res) => {
-//   const mentorId = req.params.mentorId; // Get mentorId from the URL parameters
-//   try {
-//     // Query to fetch mentor by ID
-//     const [rows, fields] = await db.execute(
-//       "SELECT * FROM Mentor WHERE mentorID = ?",
-//       [mentorId]
-//     );
-//     if (rows.length > 0) {
-//       res.json(rows[0]); // Return the mentor data if found
-//     } else {
-//       res.status(404).send("Mentor not found"); // If no mentor is found
-//     }
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send("Database Error"); // If there's an error with the database query
-//   }
-// };
+
 // / mentor
+const createMentor = async (req, res) => {
+  const {
+    mentorID,
+    firstName,
+    lastName,
+    schooling,
+    description,
+    emailAddress,
+    location,
+    phoneNumber,
+  } = req.body;
+
+  try {
+    await db.execute(
+      `INSERT INTO Mentor (mentorID, firstName, lastName, schooling, description, emailAddress, location, phoneNumber) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        mentorID,
+        firstName,
+        lastName,
+        schooling,
+        description,
+        emailAddress,
+        location,
+        phoneNumber,
+      ]
+    );
+
+    res.status(201).json({
+      message: "Mentor created successfully",
+      data: req.body,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database Error");
+  }
+};
+
+const addmentorSkill = async (req, res) => {
+  const { fname, lname, phonenumber, skillname, experiencelevel } = req.body;
+
+  try {
+    // Get mentorID
+    const [mentorRows] = await db.execute(
+      `SELECT mentorID FROM Mentor WHERE firstName = ? AND lastName = ? AND phoneNumber = ?`,
+      [fname, lname, phonenumber]
+    );
+
+    if (mentorRows.length === 0) {
+      return res.status(404).json({ message: "Mentor not found" });
+    }
+
+    const mentorID = mentorRows[0].mentorID;
+
+    // Get skillID
+    const [skillRows] = await db.execute(
+      `SELECT skillsID FROM Skills WHERE skillsName = ?`,
+      [skillname]
+    );
+
+    if (skillRows.length === 0) {
+      return res.status(404).json({ message: "Skill not found" });
+    }
+
+    const skillID = skillRows[0].skillsID;
+
+    // Check if the mentor already has the skill assigned
+    const [existingRows] = await db.execute(
+      `SELECT * FROM hasSkills WHERE mentorID = ? AND skillID = ?`,
+      [mentorID, skillID]
+    );
+
+    if (existingRows.length > 0) {
+      return res
+        .status(409)
+        .json({ message: "This skill is already assigned to the mentor" });
+    }
+
+    // Inseert
+    await db.execute(
+      `INSERT INTO hasSkills (mentorID, skillID, experienceLevel) VALUES (?, ?, ?)`,
+      [mentorID, skillID, experiencelevel]
+    );
+
+    res.status(201).json({
+      message: "Mentor Skill added successfully",
+      data: req.body,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Database Error");
+  }
+};
+
 // const deleteMentor = async (req, res) => {
-//     const { fname, lname, phonenumber } = req.params;
 
-//     try {
-//         // Delete mentor from the Mentor table based on first name, last name, and phone number
-//         const result = await db.execute(
-//             `DELETE FROM Mentor WHERE firstName = ? AND lastName = ? AND phoneNumber = ?`,
-//             [fname, lname, phonenumber]
-//         );
-
-//         // Check if any rows were affected
-//         if (result.affectedRows > 0) {
-//             res.status(200).json({
-//                 message: 'Mentor deleted successfully',
-//                 firstName: fname,
-//                 lastName: lname,
-//                 phoneNumber: phonenumber
-//             });
-//         } else {
-//             res.status(404).json({
-//                 message: 'Mentor not found'
-//             });
-//         }
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send("Database Error");
-//     }
 // };
 
 // /mentor/findhobbyiest
@@ -205,7 +256,6 @@ const retrieveHobbyistRequestsByStatus = async (req, res) => {
   }
 };
 
-// Update the status of a hobbyist request
 const updateHobbyistRequestStatus = async (req, res) => {
   const { status, requestid } = req.params;
 
@@ -248,7 +298,6 @@ const createPost = async (req, res) => {
   }
 };
 
-// Retrieve all posts for a specific mentor based on their name and phone number
 const retrieveAllPosts = async (req, res) => {
   const { fname, lname, phonenumber } = req.params;
 
@@ -273,7 +322,7 @@ const retrieveAllPosts = async (req, res) => {
     );
 
     if (rows.length > 0) {
-      res.json(rows); // Return posts if found
+      res.json(rows);
     } else {
       res.status(404).send("No posts found for the given mentor.");
     }
@@ -292,11 +341,26 @@ const createEvent = async (req, res) => {
     location,
     description,
     date,
-    skillID,
+    skillName,
   } = req.body;
 
   try {
-    // Insert event data into the database
+    const [rows] = await db.execute(
+      `SELECT 
+                skills.skillsID
+             FROM 
+                skills
+             WHERE 
+                skills.skillsName = ?`,
+      [skillName]
+    );
+
+    if (rows.length === 0) {
+      return res.status(404).send(`Skill '${skillName}' not found.`);
+    }
+
+    const skillID = rows[0].skillsID;
+
     await db.execute(
       `INSERT INTO Event (eventID, eventName, startTime, endTime, location, description, date, skillID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
@@ -310,7 +374,7 @@ const createEvent = async (req, res) => {
         skillID,
       ]
     );
-    console.log(`Event created with data: ${JSON.stringify(req.body)}`);
+
     res.status(201).json({
       message: "Event created successfully",
       data: req.body,
@@ -326,14 +390,11 @@ const createEventAttendance = async (req, res) => {
   const { attendanceID, role, hobbyistID, mentorID, eventID } = req.body;
 
   try {
-    // Insert attendance data into the database
     await db.execute(
       `INSERT INTO Attendance (attendanceID, role, hobbyistID, mentorID, eventID) VALUES (?, ?, ?, ?, ?)`,
       [attendanceID, role, hobbyistID, mentorID, eventID]
     );
-    console.log(
-      `Event attendance created with data: ${JSON.stringify(req.body)}`
-    );
+
     res.status(201).json({
       message: "Event attendance created successfully",
       data: req.body,
@@ -462,6 +523,8 @@ const retrieveAllEvents = async (req, res) => {
 };
 
 module.exports = {
+  addmentorSkill,
+  createMentor,
   createEvent,
   createEventAttendance,
   retrieveEventInformationByID,
@@ -472,6 +535,7 @@ module.exports = {
   retrieveAllHobbyistRequests,
   createPost,
   retrieveAllPosts,
+  createEvent,
   retrieveAllEvents,
   retrieveHobbyiestByName,
   retrieveHobbyiestByLocation,

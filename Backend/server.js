@@ -1,16 +1,16 @@
 const express = require("express");
 const cors = require("cors"); // Import CORS middleware
 const app = express();
-const mentorRoutes = require("./routes/mentorRoutes"); // Importing mentor routes
+const mentorRoutes = require('./routes/mentorRoutes'); 
+const hobbyistRoutes = require('./routes/hobbyistRoutes'); 
 
-// Middleware to parse JSON data in request bodies
 app.use(express.json());
 
 // Enable CORS for all routes
 app.use(cors());
 
-// Use the routes
-app.use("/mentor", mentorRoutes);
+app.use('/mentor', mentorRoutes);
+app.use('/hobbyist', hobbyistRoutes);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {

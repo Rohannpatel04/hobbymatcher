@@ -149,6 +149,7 @@ function MentorEvents() {
     e.preventDefault();
     if (formType === "event") {
       e.preventDefault();
+      console.log(eventData);
       try {
         const response = await fetch(
           "http://localhost:3001/mentor/createevent",

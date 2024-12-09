@@ -9,15 +9,16 @@ function Mentor() {
   // const [mentorIDData, setMentorIDData] = useState({
   //   mentorID: "",
   // });
-  const [mentorResultData, setMentorResultData] = useState(null);
+  // const [mentorResultData, setMentorResultData] = useState(null);
   const [mentorData, setMentorData] = useState({
-    MentorID: "",
-    name: "",
-    emailaddress: "",
-    phonenumber: "",
-    schooling: "",
-    description: "",
-    location: "",
+    mentorID: null,
+    firstName: null,
+    lastName: null,
+    emailaddress: null,
+    phonenumber: null,
+    schooling: null,
+    description: null,
+    location: null,
   });
 
   // Hobbyist Form Data
@@ -66,6 +67,22 @@ function Mentor() {
     });
   };
 
+  const [mentorSkillData, setMentorSkillData] = useState({
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
+    skillname: "",
+    experiencelevel: "",
+  });
+  const handleMentorSkillsChange = (e) => {
+    const { name, value } = e.target;
+    setMentorSkillData({
+      ...mentorSkillData,
+      [name]: value,
+    });
+    console.log(mentorSkillData); // Check if mentorSkillData is updated here
+  };
+
   // Handle Hobbyist Form Changes
   const handleHobbyistChange = (e) => {
     const { name, value } = e.target;
@@ -94,14 +111,92 @@ function Mentor() {
   // };
 
   // Handle Form Submissions
-  const handleSubmit = (e, formType) => {
+  const handleSubmit = async (e, formType) => {
     e.preventDefault();
     if (formType === "mentor") {
-      console.log("Mentor Data Saved:", mentorData);
-    } else if (formType === "hobbyist") {
-      console.log("Hobbyist Data Saved:", hobbyistData);
+      try {
+        const response = await fetch(
+          "http://localhost:3001/mentor/creatementor",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              mentorID: mentorData.mentorID,
+              firstName: mentorData.firstName,
+              lastName: mentorData.lastName,
+              schooling: mentorData.schooling,
+              description: mentorData.description,
+              emailAddress: mentorData.emailaddress,
+              location: mentorData.location,
+              phoneNumber: mentorData.phonenumber,
+            }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        alert("mentor created successfully!");
+
+        // Clear form after successful submission
+      } catch (error) {
+        console.error("Error creating mentor:", error);
+        alert("Error creating mentor. Please try again.");
+      }
     } else if (formType === "deleteMentor") {
       console.log("Delete Mentor Data:", deleteMentorData);
+    } else if (formType === "mentorSkills") {
+      // This is still in progress.
+      const bodyData = {
+        fname: mentorSkillData.firstName || null,
+        lname: mentorSkillData.lastName || null,
+        phonenumber: mentorSkillData.phoneNumber,
+        skillname: mentorSkillData.skillname || null,
+        experiencelevel: mentorSkillData.experiencelevel,
+      };
+      try {
+        console.log(bodyData);
+        const response = await fetch(
+          "http://localhost:3001/mentor/addmentorskill",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // body: JSON.stringify({
+            //   fname: mentorSkillData.firstName,
+            //   lname: mentorSkillData.lastName,
+            //   phonenumber: mentorSkillData.phonenumber,
+            //   skillname: mentorSkillData.skillname,
+            //   experiencelevel: mentorSkillData.experiencelevel,
+
+            //   // fname: "John",
+            //   // lname: "Jackson",
+            //   // phonenumber: "3423662345",
+            //   // skillname: "Swimming",
+            //   // experiencelevel: "10",
+            // }),
+
+            body: JSON.stringify(bodyData),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        alert("mentor skills created successfully!");
+
+        // Clear form after successful submission
+      } catch (error) {
+        console.error("Error creating mentor skills:", error);
+        alert("Error creating mentor skills. Please try again.");
+      }
     }
   };
 
@@ -121,7 +216,6 @@ function Mentor() {
           Mentor Events
         </Link>
       </div>
-
       <h2>Create New Mentor</h2>
       {/* Mentor Form */}
       <form onSubmit={(e) => handleSubmit(e, "mentor")} className="mentor-form">
@@ -146,12 +240,39 @@ function Mentor() {
       </form>
       <h3>Mentor Preview:</h3>
       <pre className="preview-box">{JSON.stringify(mentorData, null, 2)}</pre>
-
       <hr />
-
-      <h2>Create New Endorsement</h2>
-      {/* Hobbyist Form */}
+      <h2>Add mentor skill</h2>
+      {/* Mentor Form */}
       <form
+        onSubmit={(e) => handleSubmit(e, "mentorSkills")}
+        className="mentor-form"
+      >
+        {Object.keys(mentorSkillData).map((field) => (
+          <div key={field} className="form-field">
+            <label htmlFor={field} className="form-label">
+              {field}:
+            </label>
+            <input
+              type="text"
+              id={field}
+              name={field}
+              value={mentorSkillData[field]}
+              onChange={handleMentorSkillsChange}
+              className="form-input"
+            />
+          </div>
+        ))}
+        <button type="submit" className="submit-button">
+          Save Mentor Data
+        </button>
+      </form>
+      <h3>Mentor Preview:</h3>
+      <pre>{JSON.stringify(mentorSkillData, null, 2)}</pre>{" "}
+      {/* For better visualization */}
+      <hr />
+      {/* <h2>Create New Endorsement</h2> */}
+      {/* Hobbyist Form */}
+      {/* <form
         onSubmit={(e) => handleSubmit(e, "hobbyist")}
         className="hobbyist-form"
       >
@@ -177,8 +298,7 @@ function Mentor() {
       <h3>Hobbyist Preview:</h3>
       <pre className="preview-box">{JSON.stringify(hobbyistData, null, 2)}</pre>
 
-      <hr />
-
+      <hr /> */}
       <h2>Delete Mentor</h2>
       {/* Delete Mentor Form */}
       <form
@@ -221,9 +341,7 @@ function Mentor() {
       <pre className="preview-box">
         {JSON.stringify(deleteMentorData, null, 2)}
       </pre>
-
       <hr />
-
       {/* <h2>GET information with Mentor ID</h2> */}
       {/* Mentor ID Form */}
       {/* <form

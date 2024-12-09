@@ -54,7 +54,6 @@ function MentorRequest() {
         try {
           const response = await fetch(
             `http://localhost:3001/mentor/retrivehobbyiestrequestbystatus/${mentorStatusData.firstname}/${mentorStatusData.lastname}/${mentorStatusData.phonenumber}/${mentorStatusData.status}`
-            // http://localhost:3001/mentor/retrivehobbyiestrequestbystatus/Jichael/Mordan/0724392100/Declined
           );
           if (!response.ok) {
             throw new Error("Hobbyists not found with status");
@@ -79,43 +78,89 @@ function MentorRequest() {
     requestID: "",
     status: "",
   });
+
   const [mentorRequesResultData, setMentorRequestResultData] = useState(null);
+  // useEffect(() => {
+  //   // Only fetch if mentorStatusData fields are not empty
+  //   if (requestData.status && requestData.requestID) {
+  //     console.log(requestData.status + requestData.requestID);
+  //     // alert(requestData.requestID, requestData.status);
+  //     const fetchMentorDataRequest = async () => {
+  //       try {
+  //         const response = await fetch(
+  //           `http://localhost:3001/mentor/updatehobbyiestrequest/Accepted/500000002`
+  //         );
+  //         if (!response.ok) {
+  //           throw new Error("Failed to update request status.");
+  //         }
+
+  //         const data = await response.json();
+
+  //         // Check if the update was successful
+  //         if (data.success) {
+  //           setMentorRequestResultData({
+  //             success: true,
+  //             message: data.message,
+  //           }); // Success response
+  //         } else {
+  //           setMentorRequestResultData({
+  //             success: false,
+  //             message: data.message,
+  //           }); // Failure response
+  //         }
+  //       } catch (error) {
+  //         console.error("Error fetching mentor data:", error.message);
+  //         setMentorRequestResultData({
+  //           success: false,
+  //           message: "Error updating the status. Please try again.", // Generic error message
+  //         });
+  //       }
+  //     };
+  //     fetchMentorDataRequest();
+  //   }
+  // }, [requestData.status, requestData.requestID]);
   useEffect(() => {
-    // Only fetch if mentorStatusData fields are not empty
     if (requestData.status && requestData.requestID) {
-      const fetchMentorData = async () => {
+      console.log(requestData.status + requestData.requestID);
+
+      const fetchMentorDataRequest = async () => {
         try {
           const response = await fetch(
-            `http://localhost:3001/mentor/updatehobbyiestrequest/${requestData.status}/${requestData.requestID}`
+            `http://localhost:3001/mentor/updatehobbyiestrequest/${requestData.status}/${requestData.requestID}`,
+            {
+              method: "PUT",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
           );
-          if (!response.ok) {
-            throw new Error("Failed to update request status.");
-          }
 
+          // Log the full response for debugging
+          console.log("Response status:", response.status);
           const data = await response.json();
+          console.log("Response data:", data);
 
-          // Check if the update was successful
-          if (data.success) {
+          if (response.ok) {
             setMentorRequestResultData({
               success: true,
               message: data.message,
-            }); // Success response
+            });
           } else {
             setMentorRequestResultData({
               success: false,
-              message: data.message,
-            }); // Failure response
+              message: data.message || "Update failed",
+            });
           }
         } catch (error) {
-          console.error("Error fetching mentor data:", error.message);
+          console.error("Full error:", error);
           setMentorRequestResultData({
             success: false,
-            message: "Error updating the status. Please try again.", // Generic error message
+            message: `Error: ${error.message}`,
           });
         }
       };
 
-      fetchMentorData();
+      fetchMentorDataRequest();
     }
   }, [requestData.status, requestData.requestID]);
 

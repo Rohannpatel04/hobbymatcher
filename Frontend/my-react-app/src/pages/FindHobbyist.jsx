@@ -103,7 +103,7 @@ function FindHobbyist() {
       const fetchMentorData = async () => {
         try {
           const response = await fetch(
-            `http://localhost:3001/mentor/findhobbyiestbynamelocationschool/${firstName}/${lastName}/${location}/${location}`
+            `http://localhost:3001/mentor/findhobbyiestbynamelocationschool/${allInputs.firstName}/${allInputs.lastName}/${allInputs.location}/${allInputs.school}`
           );
           if (!response.ok) {
             throw new Error("Hobbyists not found");
@@ -333,7 +333,7 @@ function FindHobbyist() {
         <button type="submit">Submit All</button>
         {/* Preview for Combined Form */}
         <h3>Preview:</h3>
-        {/* {AllResultData ? (
+        {AllResultData ? (
           <table className="mentor-result-table">
             <thead>
               <tr>
@@ -362,7 +362,7 @@ function FindHobbyist() {
           </table>
         ) : (
           <p>No hobbyists found for this inputs.</p>
-        )} */}
+        )}
       </form>
     </div>
   );
