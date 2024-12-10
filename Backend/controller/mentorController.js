@@ -2,7 +2,12 @@ const db = require('../db');  // Import the database connection
 
 // / mentor
 const createMentor = async (req, res) => {
-    const { mentorID, firstName, lastName, schooling, description, emailAddress, location, phoneNumber } = req.body;
+    const {firstName, lastName, schooling, description, emailAddress, location, phoneNumber } = req.body;
+
+    const maxIdQuery = `SELECT MAX(mentorID) AS maxId FROM mentor;`;
+    const [maxIdResult] = await db.query(maxIdQuery);
+    const mentorID = (maxIdResult[0].maxId || 0) + 1;
+  
 
     try {
         await db.execute(
@@ -75,12 +80,57 @@ const addmentorSkill = async (req, res) => {
     }
 };
 
-// const deleteMentor = async (req, res) => { 
+const deleteMentor = async (req, res) => {
+    const { fname, lname, phonenumber } = req.params;
 
-// }; 
+    try {
+        const deleteQuery = `
+            DELETE FROM Mentor 
+            WHERE firstName = ? AND lastName = ? AND phoneNumber = ?;
+        `;
+        
+        const result = await db.execute(deleteQuery, [fname, lname, phonenumber]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Mentor not found." });
+        }
+
+        res.status(200).json({
+            message: "Mentor deleted successfully.",
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Database Error");
+    }
+};
+
 
 
 // /mentor/findhobbyiest
+const getHobbyists = async (req, res) => {
+    try {
+        const hobbyistQuery = `
+            SELECT firstName, lastName, schooling 
+            FROM Hobbyist;
+        `;
+
+        const [hobbyistResults] = await db.query(hobbyistQuery);
+
+        if (hobbyistResults.length === 0) {
+            return res.status(404).json({ message: "No hobbyists found." });
+        }
+
+        res.status(200).json({
+            message: "Hobbyists retrieved successfully.",
+            data: hobbyistResults
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Database Error");
+    }
+};
+
+
 const retrieveHobbyiestByName = async (req, res) => {
     const { fname, lname } = req.params; // Get firstName and lastName from request parameters
 
@@ -266,17 +316,32 @@ const updateHobbyistRequestStatus = async (req, res) => {
 
 // /mentor/post
 const createPost = async (req, res) => {
-    const { postID, postContent, mentorID } = req.body; // Get data from request body
+    const {postContent, fname, lname, phonenumber} = req.body; // Get data from request body
+
+    const maxIdQuery = `SELECT MAX(postID) AS maxId FROM post;`;
+    const [maxIdResult] = await db.query(maxIdQuery);
+    const postID = (maxIdResult[0].maxId || 0) + 1;
+
 
     try {
+
+    const mentorQuery = `SELECT mentorID FROM Mentor WHERE firstName = ? AND lastName = ? AND phoneNumber = ?`;
+    const [mentorResult] = await db.query(mentorQuery, [fname, lname, phonenumber]);
+
+    if (mentorResult.length === 0) {
+        return res.status(404).json({ message: 'Mentor not found.' });
+    }
+
+    const mentorID = mentorResult[0].mentorID;
+
+
         const [result] = await db.execute(
             `INSERT INTO Post (postID, postContent, mentorID) VALUES (?, ?, ?)`,
             [postID, postContent, mentorID] // Insert the post data into the database
         );
 
         res.status(201).json({
-            message: `Post created successfully with ID: ${result.insertId}`,
-            postID: result.insertId
+            message: `Post created successfully`
         });
     } catch (err) {
         console.error(err);
@@ -320,9 +385,13 @@ const retrieveAllPosts = async (req, res) => {
 
 
 const createEvent = async (req, res) => {
-    const { eventID, eventName, startTime, endTime, location, description, date, skillName} = req.body;
+    const {eventName, startTime, endTime, location, description, date, skillName} = req.body;
 
     try {
+        const maxIdQuery = `SELECT MAX(eventID) AS maxId FROM event;`;
+        const [maxIdResult] = await db.query(maxIdQuery);
+        const eventID = (maxIdResult[0].maxId || 0) + 1;
+
         const [rows] = await db.execute(
             `SELECT 
                 skills.skillsID
@@ -354,11 +423,57 @@ const createEvent = async (req, res) => {
     }    
 };
 
-// Create Event Attendance
+
 const createEventAttendance = async (req, res) => {
-    const { attendanceID, role, hobbyistID, mentorID, eventID } = req.body;
+    const { 
+        role, 
+        hobbyistFirstName, 
+        hobbyistLastName, 
+        hobbyistPhoneNumber, 
+        mentorFirstName, 
+        mentorLastName, 
+        mentorPhoneNumber, 
+        eventID 
+    } = req.body;
 
     try {
+        let hobbyistID = null; 
+        let mentorID = null;   
+
+        if (role === "Hobbyist") {
+            const hobbyistQuery = `
+                SELECT hobbyistID 
+                FROM hobbyist 
+                WHERE firstName = ? AND lastName = ? AND phoneNumber = ?;
+            `;
+
+            const [hobbyistResult] = await db.query(hobbyistQuery, [hobbyistFirstName, hobbyistLastName, hobbyistPhoneNumber]);
+            
+            if (hobbyistResult.length === 0) {
+                return res.status(404).send('Hobbyist not found.');
+            }
+            
+            hobbyistID = hobbyistResult[0].hobbyistID;  
+        } else {
+            const mentorQuery = `
+                SELECT mentorID 
+                FROM mentor 
+                WHERE firstName = ? AND lastName = ? AND phoneNumber = ?;
+            `;
+            const [mentorResult] = await db.query(mentorQuery, [mentorFirstName, mentorLastName, mentorPhoneNumber]);
+            
+            if (mentorResult.length === 0) {
+                return res.status(404).send('Mentor not found.');
+            }
+            
+            mentorID = mentorResult[0].mentorID;  
+        }
+
+        const maxIdQuery = `SELECT MAX(attendanceID) AS maxId FROM attendance;`;
+        const [maxIdResult] = await db.query(maxIdQuery);
+
+        const attendanceID = (maxIdResult[0].maxId || 0) + 1;
+
         await db.execute(
             `INSERT INTO Attendance (attendanceID, role, hobbyistID, mentorID, eventID) VALUES (?, ?, ?, ?, ?)`,
             [attendanceID, role, hobbyistID, mentorID, eventID]
@@ -374,7 +489,9 @@ const createEventAttendance = async (req, res) => {
     }
 };
 
-// Retrieve Event Information by Event ID
+
+
+
 const retrieveEventInformationByID = async (req, res) => {
     const { eventid } = req.params;
 
@@ -493,4 +610,4 @@ const retrieveAllEvents = async (req, res) => {
 };
 
 
-module.exports = {addmentorSkill, createMentor, createEvent,createEventAttendance,retrieveEventInformationByID,retrieveEventInformationByName,retrieveAllEvents,updateHobbyistRequestStatus, retrieveHobbyistRequestsByStatus, retrieveAllHobbyistRequests, createPost, retrieveAllPosts, createEvent, retrieveAllEvents,retrieveHobbyiestByName, retrieveHobbyiestByLocation, retrieveHobbyiestBySchool, retrieveHobbyiestByNameLocationSchool};  
+module.exports = {getHobbyists, deleteMentor, addmentorSkill, createMentor, createEvent,createEventAttendance,retrieveEventInformationByID,retrieveEventInformationByName,retrieveAllEvents,updateHobbyistRequestStatus, retrieveHobbyistRequestsByStatus, retrieveAllHobbyistRequests, createPost, retrieveAllPosts, createEvent, retrieveAllEvents,retrieveHobbyiestByName, retrieveHobbyiestByLocation, retrieveHobbyiestBySchool, retrieveHobbyiestByNameLocationSchool};  
