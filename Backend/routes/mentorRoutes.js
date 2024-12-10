@@ -69,7 +69,7 @@ router.get(
 );
 
 // /mentor/events
-// in progress
+// DONE DONE
 router.post("/createevent", mentorController.createEvent);
 // DONE DONE
 router.post("/createeventattendence", mentorController.createEventAttendance);

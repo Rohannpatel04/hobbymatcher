@@ -3,15 +3,16 @@ import "../css/MentorEvents.css";
 
 function MentorEvents() {
   // Event Form Data
+
   const [eventData, setEventData] = useState({
     eventID: "",
     eventName: "",
     startTime: "",
+    endTime: "",
     location: "",
     description: "",
     date: "",
-    skillID: "",
-    endTime: "",
+    skillName: "",
   });
 
   // Attendance Form Data
@@ -149,7 +150,21 @@ function MentorEvents() {
     e.preventDefault();
     if (formType === "event") {
       e.preventDefault();
-      console.log(eventData);
+      console.log("EventID Saved:", eventData.eventID);
+      console.log("Event Name Saved:", eventData.eventName);
+      console.log(
+        "Start Time Saved:",
+        eventData.date + " " + eventData.startTime + ":00"
+      );
+      console.log(
+        "End Time Saved:",
+        eventData.date + " " + eventData.endTime + ":00" || ""
+      );
+      console.log("Location Saved:", eventData.location);
+      console.log("Description Saved:", eventData.description);
+      console.log("Date Saved:", eventData.date);
+      console.log("Skill Name Saved:", eventData.skillName);
+
       try {
         const response = await fetch(
           "http://localhost:3001/mentor/createevent",
@@ -159,22 +174,14 @@ function MentorEvents() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              eventId: eventData.eventID,
+              eventID: eventData.eventID,
               eventName: eventData.eventName,
-              startTime: eventData.startTime,
-              endTime: eventData.endTime,
+              startTime: eventData.date + " " + eventData.startTime + ":00",
+              endTime: eventData.date + " " + eventData.endTime + ":00",
               location: eventData.location,
               description: eventData.description,
               date: eventData.date,
-              skillID: eventData.skillID,
-              // eventId: 800000048,
-              // eventName: eventData.role,
-              // startTime: eventData.startTime,
-              // endTime: eventData.endTime,
-              // location: eventData.location,
-              // description: eventData.description,
-              // date: eventData.date,
-              // skillID: eventData.skillID,
+              skillName: eventData.skillName,
             }),
           }
         );
@@ -241,7 +248,7 @@ function MentorEvents() {
             type="text"
             id="eventID"
             name="eventID"
-            value={eventData.eventID}
+            value={eventData.eventID || ""}
             onChange={handleEventChange}
             className="form-input"
           />
@@ -254,7 +261,7 @@ function MentorEvents() {
             type="text"
             id="eventName"
             name="eventName"
-            value={eventData.eventName}
+            value={eventData.eventName || ""}
             onChange={handleEventChange}
             className="form-input"
           />
@@ -268,58 +275,7 @@ function MentorEvents() {
             id="startTime"
             name="startTime"
             value={eventData.startTime}
-            onChange={handleEventChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="location" className="form-label">
-            Location:
-          </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            value={eventData.location}
-            onChange={handleEventChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="description" className="form-label">
-            Description:
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={eventData.description}
-            onChange={handleEventChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="date" className="form-label">
-            Date:
-          </label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={eventData.date}
-            onChange={handleEventChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="skillID" className="form-label">
-            Skill ID:
-          </label>
-          <input
-            type="text"
-            id="skillID"
-            name="skillID"
-            value={eventData.skillID}
-            onChange={handleEventChange}
+            onChange={handleEventChange || ""}
             className="form-input"
           />
         </div>
@@ -332,7 +288,58 @@ function MentorEvents() {
             id="endTime"
             name="endTime"
             value={eventData.endTime}
-            onChange={handleEventChange}
+            onChange={handleEventChange || ""}
+            className="form-input"
+          />
+        </div>
+        <div className="form-field">
+          <label htmlFor="location" className="form-label">
+            Location:
+          </label>
+          <input
+            type="text"
+            id="location"
+            name="location"
+            value={eventData.location}
+            onChange={handleEventChange || ""}
+            className="form-input"
+          />
+        </div>
+        <div className="form-field">
+          <label htmlFor="description" className="form-label">
+            Description:
+          </label>
+          <textarea
+            id="description"
+            name="description"
+            value={eventData.description}
+            onChange={handleEventChange || ""}
+            className="form-input"
+          />
+        </div>
+        <div className="form-field">
+          <label htmlFor="date" className="form-label">
+            Date:
+          </label>
+          <input
+            type="date"
+            id="date"
+            name="date"
+            value={eventData.date}
+            onChange={handleEventChange || ""}
+            className="form-input"
+          />
+        </div>
+        <div className="form-field">
+          <label htmlFor="skillName" className="form-label">
+            Skill Name:
+          </label>
+          <input
+            type="text"
+            id="skillName"
+            name="skillName"
+            value={eventData.skillName}
+            onChange={handleEventChange || ""}
             className="form-input"
           />
         </div>
