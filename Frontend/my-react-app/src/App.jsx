@@ -7,6 +7,7 @@ import MentorRequest from "./pages/MentorRequest";
 import MentorPost from "./pages/MentorPost";
 import MentorEvents from "./pages/MentorEvents";
 import Hobbyist from "./pages/Hobbyist";
+import HobbyistFindMentor from "./pages/HobbyistFindMentor";
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/mentor/requests" element={<MentorRequest />} />
         <Route path="/mentor/post" element={<MentorPost />} />
         <Route path="/mentor/events" element={<MentorEvents />} />
+        <Route path="/hobbyist/findmentor" element={<HobbyistFindMentor />} />
       </Routes>
     </Router>
   );

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "../css/FindHobbyist.css";
-import { all } from "axios";
 
 function FindHobbyist() {
   // Individual form states
@@ -297,78 +296,80 @@ function FindHobbyist() {
       </form>
 
       {/* Combined Form */}
-      <h2>Find Hobbyists by School, Location, First Name, and Last Name</h2>
-      <form onSubmit={(e) => handleSubmit(e, "all")}>
-        <label>
-          School:
-          <input
-            type="text"
-            name="school"
-            value={allInputs.school}
-            onChange={handleAllInputsChange}
-          />
-        </label>
-        <label>
-          Location:
-          <input
-            type="text"
-            name="location"
-            value={allInputs.location}
-            onChange={handleAllInputsChange}
-          />
-        </label>
-        <label>
-          First Name:
-          <input
-            type="text"
-            name="firstName"
-            value={allInputs.firstName}
-            onChange={handleAllInputsChange}
-          />
-        </label>
-        <label>
-          Last Name:
-          <input
-            type="text"
-            name="lastName"
-            value={allInputs.lastName}
-            onChange={handleAllInputsChange}
-          />
-        </label>
-        <button type="submit">Submit All</button>
-        {/* Preview for Combined Form */}
-        <h3>Preview:</h3>
-        {AllResultData ? (
-          <table className="mentor-result-table">
-            <thead>
-              <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Phone Number</th>
-                <th>Email Address</th>
-                <th>Location</th>
-                <th>Description</th>
-                <th>Schooling</th>
-              </tr>
-            </thead>
-            <tbody>
-              {AllResultData.map((item, index) => (
-                <tr key={index}>
-                  <td>{item.firstName}</td>
-                  <td>{item.lastName}</td>
-                  <td>{item.phoneNumber}</td>
-                  <td>{item.emailAddress}</td>
-                  <td>{item.location}</td>
-                  <td>{item.description}</td>
-                  <td>{item.schooling}</td>
+      <div>
+        <h2>Find Hobbyists by School, Location, First Name, and Last Name</h2>
+        <form onSubmit={(e) => handleSubmit(e, "all")}>
+          <label>
+            School:
+            <input
+              type="text"
+              name="school"
+              value={allInputs.school}
+              onChange={handleAllInputsChange}
+            />
+          </label>
+          <label>
+            Location:
+            <input
+              type="text"
+              name="location"
+              value={allInputs.location}
+              onChange={handleAllInputsChange}
+            />
+          </label>
+          <label>
+            First Name:
+            <input
+              type="text"
+              name="firstName"
+              value={allInputs.firstName}
+              onChange={handleAllInputsChange}
+            />
+          </label>
+          <label>
+            Last Name:
+            <input
+              type="text"
+              name="lastName"
+              value={allInputs.lastName}
+              onChange={handleAllInputsChange}
+            />
+          </label>
+          <button type="submit">Submit All</button>
+          {/* Preview for Combined Form */}
+          <h3>Preview:</h3>
+          {AllResultData ? (
+            <table className="mentor-result-table">
+              <thead>
+                <tr>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Phone Number</th>
+                  <th>Email Address</th>
+                  <th>Location</th>
+                  <th>Description</th>
+                  <th>Schooling</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <p>No hobbyists found for this inputs.</p>
-        )}
-      </form>
+              </thead>
+              <tbody>
+                {AllResultData.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.firstName}</td>
+                    <td>{item.lastName}</td>
+                    <td>{item.phoneNumber}</td>
+                    <td>{item.emailAddress}</td>
+                    <td>{item.location}</td>
+                    <td>{item.description}</td>
+                    <td>{item.schooling}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No hobbyists found for this inputs.</p>
+          )}
+        </form>
+      </div>
     </div>
   );
 }

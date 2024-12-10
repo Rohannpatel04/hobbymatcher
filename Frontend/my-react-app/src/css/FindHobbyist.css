@@ -1,15 +1,24 @@
 /* Container for hobbyist form */
-.hobbyist-container {
+.hobbyist-find-mentor-container {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* Adds space between each form */
+  gap: 20px; /* Adds space between each section */
   align-items: center; /* Center horizontally */
   justify-content: center; /* Center vertically */
   height: 100vh; /* Takes up the full height of the viewport */
-  padding: 40px 20px 20px; /* Adds more space at the top (increased padding-top) */
+  padding: 40px 20px 20px;
   padding-top: 200px;
   padding-bottom: 100px;
   box-sizing: border-box;
+  background-color: #f4f4f9; /* Slightly off-white background */
+}
+
+/* Header Section */
+h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 /* Form field styling */
@@ -19,16 +28,23 @@ form {
   gap: 10px; /* Adds space between label, input, and button */
   width: 100%;
   max-width: 400px; /* Limits the width of the form */
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px 30px;
+  box-sizing: border-box;
 }
 
 /* Label styling */
 label {
   font-weight: bold;
   font-size: 14px;
+  margin-bottom: 8px;
+  color: #333;
 }
 
 /* Input styling */
-input {
+input[type="text"] {
   padding: 8px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -39,7 +55,7 @@ input {
 
 /* Button styling */
 button {
-  padding: 8px 16px;
+  padding: 10px 16px;
   background-color: #007bff; /* Blue button */
   color: white;
   border: none;
@@ -54,23 +70,25 @@ button:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Adjust spacing between forms */
-form + form {
-  margin-top: 20px; /* Adds space between consecutive forms */
+/* Table Header Styling */
+.mentor-result-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
 }
 
-/* Table Header Styling */
 .mentor-result-table thead {
   background-color: #007bff;
   color: white;
 }
 
 .mentor-result-table th {
-  padding: 6px 8px;
+  padding: 10px 8px;
   font-weight: bold;
   text-transform: uppercase;
   font-size: 12px;
   border: 1px solid #ddd;
+  text-align: left;
 }
 
 /* Table Body Styling */
@@ -83,26 +101,31 @@ form + form {
 }
 
 .mentor-result-table td {
-  padding: 6px 8px;
+  padding: 10px 8px;
   border: 1px solid #ddd;
   font-size: 12px;
-}
-
-/* Move table further to the left but add padding to the left */
-.mentor-result-table {
-  padding-left: 20px; /* Adds padding to the left of the table */
-  margin-top: 20px; /* Adds space between table and form */
+  text-align: left;
 }
 
 /* Responsive Design for Small Screens */
 @media (max-width: 600px) {
-  .mentor-result-table {
-    font-size: 10px; /* Smaller font size for mobile */
-    padding-left: 10px; /* Adjusts padding for mobile */
+  .hobbyist-find-mentor-container {
+    padding: 20px 10px;
+  }
+
+  form {
+    width: 100%;
+    max-width: 100%;
   }
 
   .mentor-result-table th,
   .mentor-result-table td {
     padding: 6px; /* Smaller padding for mobile */
+    font-size: 10px; /* Smaller font size for mobile */
+  }
+
+  button {
+    font-size: 12px; /* Smaller button text for mobile */
+    padding: 8px 12px;
   }
 }

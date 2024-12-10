@@ -3,11 +3,15 @@ const router = express.Router();
 const hobbyistController = require("../controller/hobbyistController");
 
 // /Hobbyist
-router.post("/createhobbyist", hobbyistController.createHobbyist); // Need to fix front end
+
+// DONE DONE
+router.post("/createhobbyist", hobbyistController.createHobbyist);
+
+// DONE DONE
 router.delete(
   "/deletehobbyist/:fname/:lname/:phonenumber",
   hobbyistController.deleteHobbyist
-); // need to implement frontend
+);
 
 // /Hobbyist/Findmentor
 // router.get('/getallmentors', mentorController.getMentors); // need to test
@@ -17,28 +21,40 @@ router.delete(
 //   "/getmentorEndorsements/:firstName/:lastName/:phonenumber",
 //   mentorController.getMentorEndorsements
 // );
+
+// DONE DONE
 router.get(
   "/getmentorsbyskills/:skill",
   hobbyistController.getMentorsWithSkills
-); // need to implement frontend
+);
+
+// DONE DONE
 router.get(
   "/getmentorsbylocation/:location",
   hobbyistController.getMentorsFromLocation
-); // need to implement frontend
+);
+
+// DONE DONE
 router.get(
   "/getmentorsbyskillslocation/:skill/:location",
   hobbyistController.getMentorsWithSkillsAndLocation
-); // need to implement frontend
+);
+
+// DONE DONE
 router.get(
   "/getmentorsbyskillsschooling/:skill/:schooling",
   hobbyistController.getMentorsWithSkillsAndSchooling
-); // need to implement frontend
+);
+// DONE DONE
 router.get(
   "/getmentorsbylocationschooling/:location/:schooling",
   hobbyistController.getMentorsFromLocationAndSchooling
-); // need to implement frontend
-router.post("/createrequest", hobbyistController.createRequest); // Need to fix front end
-router.post("/createendorsement", hobbyistController.createEndorsement); // need to implement frontend
+);
+
+// DONE DONE
+router.post("/createrequest", hobbyistController.createRequest);
+// DONE DONE
+router.post("/createendorsement", hobbyistController.createEndorsement);
 router.get(
   "/getallrequestbyhobbyistinfo/:fname/:lname/:phonenumber",
   hobbyistController.getAllRequestByHobbyistInfo
