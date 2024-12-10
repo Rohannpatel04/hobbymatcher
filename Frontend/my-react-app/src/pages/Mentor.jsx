@@ -11,14 +11,13 @@ function Mentor() {
   // });
   // const [mentorResultData, setMentorResultData] = useState(null);
   const [mentorData, setMentorData] = useState({
-    mentorID: null,
-    firstName: null,
-    lastName: null,
-    emailaddress: null,
-    phonenumber: null,
-    schooling: null,
-    description: null,
-    location: null,
+    firstName: "",
+    lastName: "",
+    emailaddress: "",
+    phonenumber: "",
+    schooling: "",
+    description: "",
+    location: "",
   });
 
   // Hobbyist Form Data
@@ -33,7 +32,8 @@ function Mentor() {
 
   // Delete Mentor Form Data
   const [deleteMentorData, setDeleteMentorData] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     phonenumber: "",
   });
   // useEffect(() => {
@@ -123,7 +123,6 @@ function Mentor() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              mentorID: mentorData.mentorID,
               firstName: mentorData.firstName,
               lastName: mentorData.lastName,
               schooling: mentorData.schooling,
@@ -148,7 +147,37 @@ function Mentor() {
         alert("Error creating mentor. Please try again.");
       }
     } else if (formType === "deleteMentor") {
-      console.log("Delete Mentor Data:", deleteMentorData);
+      try {
+        const response = await fetch(
+          `http://localhost:3001/mentor/deletementor/${deleteMentorData.firstName}/${deleteMentorData.lastName}/${deleteMentorData.phonenumber}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            // body: JSON.stringify({
+            //   // fname: deleteMentorData.firstName,
+            //   // lname: deleteMentorData.lastName,
+            //   // phonenumber: deleteMentorData.phonenumber,
+            //   fname: "Russell",
+            //   lname: "Wilson",
+            //   phonenumber: "1234567890",
+            // }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        alert("mentor deleted successfully!");
+
+        // Clear form after successful submission
+      } catch (error) {
+        console.error("Error deleting mentor:", error.message);
+        alert("Error deleting mentor. Please try again.");
+      }
     } else if (formType === "mentorSkills") {
       // This is still in progress.
       const bodyData = {
@@ -241,7 +270,7 @@ function Mentor() {
       <h3>Mentor Preview:</h3>
       <pre className="preview-box">{JSON.stringify(mentorData, null, 2)}</pre>
       <hr />
-      <h2>Add mentor skill</h2>
+      <h2>Add a new skill to Mentor</h2>
       {/* Mentor Form */}
       <form
         onSubmit={(e) => handleSubmit(e, "mentorSkills")}
@@ -266,7 +295,7 @@ function Mentor() {
           Save Mentor Data
         </button>
       </form>
-      <h3>Mentor Preview:</h3>
+      <h3>Mentor Data Preview:</h3>
       <pre>{JSON.stringify(mentorSkillData, null, 2)}</pre>{" "}
       {/* For better visualization */}
       <hr />
@@ -307,13 +336,26 @@ function Mentor() {
       >
         <div className="form-field">
           <label htmlFor="name" className="form-label">
-            Mentor Name:
+            Mentor First Name:
           </label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={deleteMentorData.name}
+            id="firstName"
+            name="firstName"
+            value={deleteMentorData.firstName}
+            onChange={handleDeleteMentorChange}
+            className="form-input"
+          />
+        </div>
+        <div className="form-field">
+          <label htmlFor="name" className="form-label">
+            Mentor Last Name:
+          </label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={deleteMentorData.lastName}
             onChange={handleDeleteMentorChange}
             className="form-input"
           />

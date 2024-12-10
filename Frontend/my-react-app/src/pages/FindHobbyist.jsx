@@ -162,7 +162,9 @@ function FindHobbyist() {
   return (
     <div className="hobbyist-container">
       {/* School Form */}
+
       <form onSubmit={(e) => handleSubmit(e, "school")}>
+        <h2>Find Hobbyists by School</h2>
         <label>
           School:
           <input type="text" value={school} onChange={handleSchoolChange} />
@@ -203,6 +205,7 @@ function FindHobbyist() {
       </form>
 
       {/* Location Form */}
+      <h2>Find Hobbyists by Location</h2>
       <form onSubmit={(e) => handleSubmit(e, "location")}>
         <label>
           Location:
@@ -244,6 +247,7 @@ function FindHobbyist() {
       </form>
 
       {/* Name Form */}
+      <h2>Find Hobbyists by FirstName and LastName</h2>
       <form onSubmit={(e) => handleSubmit(e, "name")}>
         <label>
           First Name:
@@ -293,6 +297,7 @@ function FindHobbyist() {
       </form>
 
       {/* Combined Form */}
+      <h2>Find Hobbyists by School, Location, First Name, and Last Name</h2>
       <form onSubmit={(e) => handleSubmit(e, "all")}>
         <label>
           School:

@@ -4,7 +4,9 @@ import "../css/MentorPost.css";
 function MentorPost() {
   // Post Form Data
   const [postData, setPostData] = useState({
-    postID: "",
+    firstName: "",
+    lastName: "",
+    phoneNumber: "",
     content: "",
   });
 
@@ -86,9 +88,10 @@ function MentorPost() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              postID: postData.postID,
               postContent: postData.content,
-              mentorID: "200000002",
+              fname: postData.firstName,
+              lname: postData.lastName,
+              phonenumber: postData.phoneNumber,
             }),
           }
         );
@@ -114,36 +117,69 @@ function MentorPost() {
       <h2>Create a New Post</h2>
       <form onSubmit={(e) => handleSubmit(e, "post")} className="post-form">
         <div className="form-field">
-          <label htmlFor="postID" className="form-label">
-            Post ID:
-          </label>
-          <input
-            type="text"
-            id="postID"
-            name="postID"
-            value={postData.postID}
-            onChange={handlePostChange}
-            className="form-input"
-            required
-          />
+          <div>
+            <label htmlFor="postID" className="form-label">
+              First Name:
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={postData.firstName}
+              onChange={handlePostChange}
+              className="form-input"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="lastName" className="form-label">
+              Last Name:
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={postData.lastName}
+              onChange={handlePostChange}
+              className="form-input"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="phoneNumber" className="form-label">
+              Phone Number:
+            </label>
+            <input
+              type="text"
+              id="phoneNumber"
+              name="phoneNumber"
+              value={postData.phoneNumber}
+              onChange={handlePostChange}
+              className="form-input"
+              required
+            />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="content" className="form-label">
+              Post Content:
+            </label>
+            <textarea
+              id="content"
+              name="content"
+              value={postData.content}
+              onChange={handlePostChange}
+              className="form-input"
+              rows="4"
+              required
+            />
+          </div>
+          <button type="submit" className="submit-button">
+            Create Post
+          </button>
         </div>
-        <div className="form-field">
-          <label htmlFor="content" className="form-label">
-            Post Content:
-          </label>
-          <textarea
-            id="content"
-            name="content"
-            value={postData.content}
-            onChange={handlePostChange}
-            className="form-input"
-            rows="4"
-            required
-          />
-        </div>
-        <button type="submit" className="submit-button">
-          Create Post
-        </button>
       </form>
       <h3>Post Preview:</h3>
       <pre className="preview-box">{JSON.stringify(postData, null, 2)}</pre>

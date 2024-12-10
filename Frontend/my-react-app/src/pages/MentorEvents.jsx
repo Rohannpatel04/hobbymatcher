@@ -5,7 +5,6 @@ function MentorEvents() {
   // Event Form Data
 
   const [eventData, setEventData] = useState({
-    eventID: "",
     eventName: "",
     startTime: "",
     endTime: "",
@@ -17,11 +16,14 @@ function MentorEvents() {
 
   // Attendance Form Data
   const [attendanceData, setAttendanceData] = useState({
-    attendanceID: "",
-    role: "",
-    eventID: "",
-    hobbyistID: null,
-    mentorID: null,
+    role: "null",
+    hobbyistFirstName: "null",
+    hobbyistLastName: "null",
+    hobbyistPhoneNumber: "null",
+    mentorFirstName: "null",
+    mentorLastName: "null",
+    mentorPhonenumber: "null",
+    eventID: "null",
   });
 
   const [eventID, setEventID] = useState("");
@@ -150,20 +152,20 @@ function MentorEvents() {
     e.preventDefault();
     if (formType === "event") {
       e.preventDefault();
-      console.log("EventID Saved:", eventData.eventID);
-      console.log("Event Name Saved:", eventData.eventName);
-      console.log(
-        "Start Time Saved:",
-        eventData.date + " " + eventData.startTime + ":00"
-      );
-      console.log(
-        "End Time Saved:",
-        eventData.date + " " + eventData.endTime + ":00" || ""
-      );
-      console.log("Location Saved:", eventData.location);
-      console.log("Description Saved:", eventData.description);
-      console.log("Date Saved:", eventData.date);
-      console.log("Skill Name Saved:", eventData.skillName);
+      // console.log("EventID Saved:", eventData.eventID);
+      // console.log("Event Name Saved:", eventData.eventName);
+      // console.log(
+      //   "Start Time Saved:",
+      //   eventData.date + " " + eventData.startTime + ":00"
+      // );
+      // console.log(
+      //   "End Time Saved:",
+      //   eventData.date + " " + eventData.endTime + ":00" || ""
+      // );
+      // console.log("Location Saved:", eventData.location);
+      // console.log("Description Saved:", eventData.description);
+      // console.log("Date Saved:", eventData.date);
+      // console.log("Skill Name Saved:", eventData.skillName);
 
       try {
         const response = await fetch(
@@ -174,7 +176,7 @@ function MentorEvents() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              eventID: eventData.eventID,
+              // eventID: eventData.eventID,
               eventName: eventData.eventName,
               startTime: eventData.date + " " + eventData.startTime + ":00",
               endTime: eventData.date + " " + eventData.endTime + ":00",
@@ -209,10 +211,18 @@ function MentorEvents() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              attendanceID: attendanceData.attendanceID,
+              // attendanceID: attendanceData.attendanceID,
+              // role: attendanceData.role,
+              // hobbyistID: attendanceData.hobbyistID,
+              // mentorID: attendanceData.mentorID,
+              // eventID: attendanceData.eventID,
               role: attendanceData.role,
-              hobbyistID: attendanceData.hobbyistID,
-              mentorID: attendanceData.mentorID,
+              hobbyistFirstName: attendanceData.hobbyistFirstName,
+              hobbyistLastName: attendanceData.hobbyistLastName,
+              hobbyistPhoneNumber: attendanceData.hobbyistPhoneNumber,
+              mentorFirstName: attendanceData.mentorFirstName,
+              mentorLastName: attendanceData.mentorLastName,
+              mentorPhoneNumber: attendanceData.mentorPhoneNumber,
               eventID: attendanceData.eventID,
             }),
           }
@@ -241,111 +251,113 @@ function MentorEvents() {
       <h2>Create Event</h2>
       <form onSubmit={(e) => handleSubmit(e, "event")} className="event-form">
         <div className="form-field">
-          <label htmlFor="eventID" className="form-label">
-            Event ID:
-          </label>
-          <input
-            type="text"
-            id="eventID"
-            name="eventID"
-            value={eventData.eventID || ""}
-            onChange={handleEventChange}
-            className="form-input"
-          />
+          {/* <div>
+            <label htmlFor="eventID" className="form-label">
+              Event ID:
+            </label>
+            <input
+              type="text"
+              id="eventID"
+              name="eventID"
+              value={eventData.eventID || ""}
+              onChange={handleEventChange}
+              className="form-input"
+            />
+          </div> */}
+          <div className="form-field">
+            <label htmlFor="eventName" className="form-label">
+              Event Name:
+            </label>
+            <input
+              type="text"
+              id="eventName"
+              name="eventName"
+              value={eventData.eventName || ""}
+              onChange={handleEventChange}
+              className="form-input"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="startTime" className="form-label">
+              Start Time:
+            </label>
+            <input
+              type="time"
+              id="startTime"
+              name="startTime"
+              value={eventData.startTime}
+              onChange={handleEventChange || ""}
+              className="form-input"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="endTime" className="form-label">
+              End Time:
+            </label>
+            <input
+              type="time"
+              id="endTime"
+              name="endTime"
+              value={eventData.endTime}
+              onChange={handleEventChange || ""}
+              className="form-input"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="location" className="form-label">
+              Location:
+            </label>
+            <input
+              type="text"
+              id="location"
+              name="location"
+              value={eventData.location}
+              onChange={handleEventChange || ""}
+              className="form-input"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="description" className="form-label">
+              Description:
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={eventData.description}
+              onChange={handleEventChange || ""}
+              className="form-input"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="date" className="form-label">
+              Date:
+            </label>
+            <input
+              type="date"
+              id="date"
+              name="date"
+              value={eventData.date}
+              onChange={handleEventChange || ""}
+              className="form-input"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="skillName" className="form-label">
+              Skill Name:
+            </label>
+            <input
+              type="text"
+              id="skillName"
+              name="skillName"
+              value={eventData.skillName}
+              onChange={handleEventChange || ""}
+              className="form-input"
+            />
+          </div>
+          <button type="submit" className="submit-button">
+            Save Event Data
+          </button>
         </div>
-        <div className="form-field">
-          <label htmlFor="eventName" className="form-label">
-            Event Name:
-          </label>
-          <input
-            type="text"
-            id="eventName"
-            name="eventName"
-            value={eventData.eventName || ""}
-            onChange={handleEventChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="startTime" className="form-label">
-            Start Time:
-          </label>
-          <input
-            type="time"
-            id="startTime"
-            name="startTime"
-            value={eventData.startTime}
-            onChange={handleEventChange || ""}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="endTime" className="form-label">
-            End Time:
-          </label>
-          <input
-            type="time"
-            id="endTime"
-            name="endTime"
-            value={eventData.endTime}
-            onChange={handleEventChange || ""}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="location" className="form-label">
-            Location:
-          </label>
-          <input
-            type="text"
-            id="location"
-            name="location"
-            value={eventData.location}
-            onChange={handleEventChange || ""}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="description" className="form-label">
-            Description:
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={eventData.description}
-            onChange={handleEventChange || ""}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="date" className="form-label">
-            Date:
-          </label>
-          <input
-            type="date"
-            id="date"
-            name="date"
-            value={eventData.date}
-            onChange={handleEventChange || ""}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="skillName" className="form-label">
-            Skill Name:
-          </label>
-          <input
-            type="text"
-            id="skillName"
-            name="skillName"
-            value={eventData.skillName}
-            onChange={handleEventChange || ""}
-            className="form-input"
-          />
-        </div>
-        <button type="submit" className="submit-button">
-          Save Event Data
-        </button>
       </form>
       <h3>Event Preview:</h3>
       <pre className="preview-box">{JSON.stringify(eventData, null, 2)}</pre>
@@ -353,75 +365,116 @@ function MentorEvents() {
       <hr />
 
       {/* Attendance Form */}
-      <h2>Attendance</h2>
+      <h2>Create Attendance</h2>
       <form
         onSubmit={(e) => handleSubmit(e, "attendance")}
         className="attendance-form"
       >
         <div className="form-field">
-          <label htmlFor="attendanceID" className="form-label">
-            Attendance ID:
-          </label>
-          <input
-            type="text"
-            id="attendanceID"
-            name="attendanceID"
-            value={attendanceData.attendanceID}
-            onChange={handleAttendanceChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="role" className="form-label">
-            Role:
-          </label>
-          <input
-            type="text"
-            id="role"
-            name="role"
-            value={attendanceData.role}
-            onChange={handleAttendanceChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="eventID" className="form-label">
-            Event ID:
-          </label>
-          <input
-            type="text"
-            id="eventID"
-            name="eventID"
-            value={attendanceData.eventID}
-            onChange={handleAttendanceChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="hobbyistID" className="form-label">
-            Hobbyist ID:
-          </label>
-          <input
-            type="text"
-            id="hobbyistID"
-            name="hobbyistID"
-            value={attendanceData.hobbyistID}
-            onChange={handleAttendanceChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="mentorID" className="form-label">
-            Mentor ID:
-          </label>
-          <input
-            type="text"
-            id="mentorID"
-            name="mentorID"
-            value={attendanceData.mentorID}
-            onChange={handleAttendanceChange}
-            className="form-input"
-          />
+          <div>
+            <label htmlFor="role" className="form-label">
+              Role:
+            </label>
+            <input
+              type="text"
+              id="role"
+              name="role"
+              value={attendanceData.role}
+              onChange={handleAttendanceChange}
+              className="form-input"
+            />
+          </div>
+          <div>
+            <label htmlFor="hobbyistFirstName" className="form-label">
+              Hobbyist First Name:
+            </label>
+            <input
+              type="text"
+              id="hobbyistFirstName"
+              name="hobbyistFirstName"
+              value={attendanceData.hobbyistFirstName}
+              onChange={handleAttendanceChange}
+              className="form-input"
+            />
+          </div>
+          <div>
+            <label htmlFor="hobbyistLastName" className="form-label">
+              Hobbyist Last Name:
+            </label>
+            <input
+              type="text"
+              id="hobbyistLastName"
+              name="hobbyistLastName"
+              value={attendanceData.hobbyistLastName}
+              onChange={handleAttendanceChange}
+              className="form-input"
+            />
+          </div>
+          <div>
+            <label htmlFor="hobbyistPhoneNumber" className="form-label">
+              Hobbyist Phone Number:
+            </label>
+            <input
+              type="text"
+              id="hobbyistPhoneNumber"
+              name="hobbyistPhoneNumber"
+              value={attendanceData.hobbyistPhoneNumber}
+              onChange={handleAttendanceChange}
+              className="form-input"
+            />
+          </div>
+          <div>
+            <label htmlFor="mentorFirstName" className="form-label">
+              Mentor First Name:
+            </label>
+            <input
+              type="text"
+              id="mentorFirstName"
+              name="mentorFirstName"
+              value={attendanceData.mentorFirstName}
+              onChange={handleAttendanceChange}
+              className="form-input"
+            />
+          </div>
+          <div>
+            <label htmlFor="mentorLastName" className="form-label">
+              Mentor Last Name:
+            </label>
+            <input
+              type="text"
+              id="mentorLastName"
+              name="mentorLastName"
+              value={attendanceData.mentorLastName}
+              onChange={handleAttendanceChange}
+              className="form-input"
+            />
+          </div>
+          <div>
+            <label htmlFor="mentorPhonenumber" className="form-label">
+              Mentor Phone Number:
+            </label>
+            <input
+              type="text"
+              id="mentorPhonenumber"
+              name="mentorPhonenumber"
+              value={attendanceData.mentorPhonenumber}
+              onChange={handleAttendanceChange}
+              className="form-input"
+            />
+          </div>
+          <div>
+            <label htmlFor="eventID" className="form-label">
+              Event ID:
+            </label>
+            <input
+              type="text"
+              id="eventID"
+              name="eventID"
+              value={attendanceData.eventID}
+              onChange={handleAttendanceChange}
+              className="form-input"
+            />
+          </div>
         </div>
         <button type="submit" className="submit-button">
           Save Attendance Data
@@ -479,8 +532,8 @@ function MentorEvents() {
         <p>No events found for this eventID.</p>
       )}
       <h2>
-        Get event information by inputing firstName, lastName, and phoneNumber
-        (FIX)
+        Get event information by inputing mentors firstName, lastName, and
+        phoneNumber
       </h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -522,10 +575,10 @@ function MentorEvents() {
               <th>Event endtime</th>
               <th>Event location</th>
               <th>Event Description</th>
-              <th>Attendance ID</th>
-              <th>Attendance Role</th>
-              <th>Attendance HobbyistID</th>
-              <th>Attendance MentorID</th>
+              <th>Event Date</th>
+              <th>Mentor First Name</th>
+              <th>Mentor Last Name</th>
+              <th>Mentor PhoneNumber</th>
             </tr>
           </thead>
           <tbody>
@@ -537,10 +590,10 @@ function MentorEvents() {
                 <td>{item.endTime}</td>
                 <td>{item.location}</td>
                 <td>{item.description}</td>
-                <td>{item.attendanceID}</td>
-                <td>{item.role}</td>
-                <td>{item.hobbyistID}</td>
-                <td>{item.mentorID}</td>
+                <td>{item.date}</td>
+                <td>{item.mentorFirstName}</td>
+                <td>{item.mentorLastName}</td>
+                <td>{item.mentorPhoneNumber}</td>
               </tr>
             ))}
           </tbody>
