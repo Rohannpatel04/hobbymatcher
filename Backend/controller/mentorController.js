@@ -1,4 +1,21 @@
-const db = require('../db');  // Import the database connection
+const db = require('../db');  
+
+// /general 
+const getSkills = async (req, res) => {
+    try {
+        const [results] = await db.execute(
+            'SELECT skillsName FROM SKILLS'
+        ); 
+
+        res.status(200).json({
+            message: "Skills fetched successfully",
+            data: results, 
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Database Error");
+    }
+}; 
 
 // / mentor
 const createMentor = async (req, res) => {
@@ -53,7 +70,7 @@ const addmentorSkill = async (req, res) => {
 
         const skillID = skillRows[0].skillsID;
 
-        // Check if the mentor already has the skill assigned 
+   
         const [existingRows] = await db.execute(
             `SELECT * FROM hasSkills WHERE mentorID = ? AND skillID = ?`,
             [mentorID, skillID]
@@ -63,7 +80,7 @@ const addmentorSkill = async (req, res) => {
             return res.status(409).json({ message: "This skill is already assigned to the mentor" });
         }
 
-        // Inseert
+     
         await db.execute(
             `INSERT INTO hasSkills (mentorID, skillID, experienceLevel) VALUES (?, ?, ?)`,
             [mentorID, skillID, experiencelevel]
@@ -110,7 +127,14 @@ const deleteMentor = async (req, res) => {
 const getHobbyists = async (req, res) => {
     try {
         const hobbyistQuery = `
-            SELECT firstName, lastName, schooling 
+            SELECT
+                firstName, 
+                lastName, 
+                schooling, 
+                description, 
+                emailAddress,
+                location, 
+                phoneNumber 
             FROM Hobbyist;
         `;
 
@@ -132,85 +156,85 @@ const getHobbyists = async (req, res) => {
 
 
 const retrieveHobbyiestByName = async (req, res) => {
-    const { fname, lname } = req.params; // Get firstName and lastName from request parameters
+    const { fname, lname } = req.params; 
 
     try { 
         const [rows, fields] = await db.execute(
             "SELECT firstName, lastName, phoneNumber, emailAddress, location, description, schooling FROM Hobbyist WHERE firstName = ? AND lastName = ?",
-            [fname, lname] // Use firstName and lastName parameters from the request
+            [fname, lname]
         );
       
         if (rows.length > 0) {
-            res.json(rows); // Return the hobbyist data if found
+            res.json(rows); 
         } else {
-            res.status(404).send("Hobbyist not found"); // If no hobbyist is found
+            res.status(404).send("Hobbyist not found"); 
         }
     } catch (err) { 
         console.error(err); 
-        res.status(500).send("Database Error"); // Handle database errors
+        res.status(500).send("Database Error"); 
     }
 };
 
 
 
 const retrieveHobbyiestByLocation = async (req, res) => {
-    const { location } = req.params; // Get location from request parameters
+    const { location } = req.params; 
 
     try { 
         const [rows, fields] = await db.execute(
             "SELECT firstName, lastName, phoneNumber, emailAddress, location, description, schooling FROM Hobbyist WHERE location = ?",
-            [location] // Use the location parameter from the request
+            [location] 
         );
       
         if (rows.length > 0) {
-            res.json(rows); // Return the hobbyists data if found
+            res.json(rows);
         } else {
-            res.status(404).send("No hobbyists found with the specified location"); // If no hobbyists are found
+            res.status(404).send("No hobbyists found with the specified location"); 
         }
     } catch (err) { 
         console.error(err); 
-        res.status(500).send("Database Error"); // Handle database errors
+        res.status(500).send("Database Error"); 
     }
 };
 
 const retrieveHobbyiestBySchool = async (req, res) => {
-    const { school } = req.params; // Get school from request parameters
+    const { school } = req.params; 
 
     try { 
         const [rows, fields] = await db.execute(
             "SELECT firstName, lastName, phoneNumber, emailAddress, location, description, schooling FROM Hobbyist WHERE schooling = ?",
-            [school] // Use the school parameter from the request
+            [school] 
         );
       
         if (rows.length > 0) {
-            res.json(rows); // Return the hobbyists data if found
+            res.json(rows); 
         } else {
-            res.status(404).send("No hobbyists found with the specified school"); // If no hobbyists are found
+            res.status(404).send("No hobbyists found with the specified school");
         }
     } catch (err) { 
         console.error(err); 
-        res.status(500).send("Database Error"); // Handle database errors
+        res.status(500).send("Database Error"); 
     }
 };
 
 
 const retrieveHobbyiestByNameLocationSchool = async (req, res) => {
-    const { fname, lname, location, school } = req.params; // Get firstName, lastName, location, and school from request parameters
+    const { fname, lname, location, school } = req.params; 
 
     try {
         const [rows, fields] = await db.execute(
             "SELECT firstName, lastName, phoneNumber, emailAddress, location, description, schooling FROM Hobbyist WHERE firstName = ? AND lastName = ? AND location = ? AND schooling = ?",
-            [fname, lname, location, school] // Use the parameters from the request
+            [fname, lname, location, school] 
         );
         
         if (rows.length > 0) {
-            res.json(rows); // Return the hobbyists data if found
+            res.json(rows); 
         } else {
             res.status(404).send("No hobbyists found with the specified name, location, and schooling"); // If no hobbyists are found
         }
     } catch (err) {
         console.error(err);
-        res.status(500).send("Database Error"); // Handle database errors
+        res.status(500).send("Database Error"); 
     }
 };
 
@@ -242,7 +266,7 @@ const retrieveAllHobbyistRequests = async (req, res) => {
         );
 
         if (rows.length > 0) {
-            res.json(rows); // Return all matching requests
+            res.json(rows); 
         } else {
             res.status(404).send("No requests found for the given mentor.");
         }
@@ -251,8 +275,6 @@ const retrieveAllHobbyistRequests = async (req, res) => {
         res.status(500).send("Database Error");
     }
 };
-
-// Retrieve hobbyist requests by status for a mentor
 const retrieveHobbyistRequestsByStatus = async (req, res) => {
     const { fname, lname, phonenumber, status } = req.params;
 
@@ -279,7 +301,7 @@ const retrieveHobbyistRequestsByStatus = async (req, res) => {
         );
 
         if (rows.length > 0) {
-            res.json(rows); // Return requests matching the status
+            res.json(rows); 
         } else {
             res.status(404).send("No requests found for the given criteria.");
         }
@@ -288,7 +310,6 @@ const retrieveHobbyistRequestsByStatus = async (req, res) => {
         res.status(500).send("Database Error");
     }
 };
-
 
 const updateHobbyistRequestStatus = async (req, res) => {
     const { status, requestid } = req.params;
@@ -316,7 +337,7 @@ const updateHobbyistRequestStatus = async (req, res) => {
 
 // /mentor/post
 const createPost = async (req, res) => {
-    const {postContent, fname, lname, phonenumber} = req.body; // Get data from request body
+    const {postContent, fname, lname, phonenumber} = req.body; 
 
     const maxIdQuery = `SELECT MAX(postID) AS maxId FROM post;`;
     const [maxIdResult] = await db.query(maxIdQuery);
@@ -337,7 +358,7 @@ const createPost = async (req, res) => {
 
         const [result] = await db.execute(
             `INSERT INTO Post (postID, postContent, mentorID) VALUES (?, ?, ?)`,
-            [postID, postContent, mentorID] // Insert the post data into the database
+            [postID, postContent, mentorID] 
         );
 
         res.status(201).json({
@@ -519,7 +540,7 @@ const retrieveEventInformationByID = async (req, res) => {
         );
 
         if (rows.length > 0) {
-            res.status(200).json(rows); // Return event and attendance information if found
+            res.status(200).json(rows); 
         } else {
             res.status(404).send("Event not found");
         }
@@ -530,7 +551,6 @@ const retrieveEventInformationByID = async (req, res) => {
 };
 
 
-// Retrieve Event Information by Event Name
 const retrieveEventInformationByName = async (req, res) => {
     const { eventname } = req.params;
 
@@ -558,7 +578,7 @@ const retrieveEventInformationByName = async (req, res) => {
         );
 
         if (rows.length > 0) {
-            res.status(200).json(rows); // Return event information if found
+            res.status(200).json(rows);
         } else {
             res.status(404).send("Event not found");
         }
@@ -568,7 +588,7 @@ const retrieveEventInformationByName = async (req, res) => {
     }
 };
 
-// Retrieve All Events for a Mentor based on First Name, Last Name, and Phone Number
+
 const retrieveAllEvents = async (req, res) => {
     const { fname, lname, phonenumber } = req.params;
 
@@ -599,7 +619,7 @@ const retrieveAllEvents = async (req, res) => {
         );
 
         if (rows.length > 0) {
-            res.status(200).json(rows); // Return events if found
+            res.status(200).json(rows); 
         } else {
             res.status(404).send("No events found for the given mentor.");
         }
@@ -610,4 +630,42 @@ const retrieveAllEvents = async (req, res) => {
 };
 
 
-module.exports = {getHobbyists, deleteMentor, addmentorSkill, createMentor, createEvent,createEventAttendance,retrieveEventInformationByID,retrieveEventInformationByName,retrieveAllEvents,updateHobbyistRequestStatus, retrieveHobbyistRequestsByStatus, retrieveAllHobbyistRequests, createPost, retrieveAllPosts, createEvent, retrieveAllEvents,retrieveHobbyiestByName, retrieveHobbyiestByLocation, retrieveHobbyiestBySchool, retrieveHobbyiestByNameLocationSchool};  
+const getMentorEventAttendance = async (req, res) => {
+        const { firstname, lastname, phonenumber } = req.params;
+
+        try {
+            const query = `
+                SELECT
+                    CONCAT(Mentor.firstName, " ", Mentor.lastName) AS MentorName,
+                    Event.eventName AS EventName,
+                    COUNT(Attendance.attendanceID) AS TotalAttendees,
+                    COUNT(CASE WHEN Attendance.role = 'Hobbyist' THEN 1 END) AS TotalHobbyists,
+                    COUNT(CASE WHEN Attendance.role = 'Mentor' THEN 1 END) AS TotalMentors
+                FROM Event
+                JOIN Attendance ON Event.eventID = Attendance.eventID
+                JOIN Mentor ON Attendance.mentorID = Mentor.mentorID
+                WHERE Mentor.firstName = ? AND Mentor.lastName = ? AND Mentor.phoneNumber = ?
+                GROUP BY Mentor.mentorID, Event.eventID
+                ORDER BY TotalAttendees DESC;
+            `;
+
+            const [results] = await db.execute(query, [firstname, lastname, phonenumber]);
+
+            if (results.length === 0) {
+                return res.status(404).json({
+                    message: "No events found for this mentor",
+                });
+            }
+
+            res.status(200).json({
+                message: "Mentor event attendance fetched successfully",
+                data: results,
+            });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send("Database Error");
+        }
+    };
+
+
+module.exports = { getMentorEventAttendance, getSkills, getHobbyists, deleteMentor, addmentorSkill, createMentor, createEvent,createEventAttendance,retrieveEventInformationByID,retrieveEventInformationByName,retrieveAllEvents,updateHobbyistRequestStatus, retrieveHobbyistRequestsByStatus, retrieveAllHobbyistRequests, createPost, retrieveAllPosts, createEvent, retrieveAllEvents,retrieveHobbyiestByName, retrieveHobbyiestByLocation, retrieveHobbyiestBySchool, retrieveHobbyiestByNameLocationSchool};  
