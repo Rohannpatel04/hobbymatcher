@@ -16,14 +16,14 @@ function MentorEvents() {
 
   // Attendance Form Data
   const [attendanceData, setAttendanceData] = useState({
-    role: "null",
-    hobbyistFirstName: "null",
-    hobbyistLastName: "null",
-    hobbyistPhoneNumber: "null",
-    mentorFirstName: "null",
-    mentorLastName: "null",
-    mentorPhonenumber: "null",
-    eventID: "null",
+    role: "",
+    hobbyistFirstName: "",
+    hobbyistLastName: "",
+    hobbyistPhoneNumber: "",
+    mentorFirstName: "",
+    mentorLastName: "",
+    mentorPhoneNumber: "",
+    eventID: "",
   });
 
   const [eventID, setEventID] = useState("");
@@ -102,6 +102,48 @@ function MentorEvents() {
       fetchMentorData();
     }
   }, [eventName]);
+
+  const [complexquery1, setComplexQuery1] = useState({
+    firstname: "",
+    lastname: "",
+    phonenumber: "",
+  });
+  const [complexquery1result, setComplexQuery1Result] = useState(null);
+  const handleComplexQuery1Change = (e) => {
+    const { name, value } = e.target;
+    setComplexQuery1((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  useEffect(() => {
+    if (
+      complexquery1.firstname &&
+      complexquery1.lastname &&
+      complexquery1.phonenumber
+    ) {
+      const fetchMentorData = async () => {
+        try {
+          const response = await fetch(
+            `http://localhost:3001/mentor/retrivevementoreventAttendance/${complexquery1.firstname}/${complexquery1.lastname}/${complexquery1.phonenumber}`
+          );
+          if (!response.ok) {
+            throw new Error("events not found");
+          }
+          const data = await response.json();
+          setComplexQuery1Result(data);
+        } catch (error) {
+          console.error("Error fetching event data:", error.message);
+        }
+      };
+      fetchMentorData();
+    }
+  }, [
+    complexquery1.firstname,
+    complexquery1.lastname,
+    complexquery1.phonenumber,
+  ]);
 
   const handleEventIDChange = (e) => setEventID(e.target.value);
   const handlePersonalInfoChange = (e) => {
@@ -202,6 +244,8 @@ function MentorEvents() {
       }
     } else if (formType === "attendance") {
       e.preventDefault();
+      console.log("comes here to attendance");
+      console.log(attendanceData);
       try {
         const response = await fetch(
           "http://localhost:3001/mentor/createeventattendence",
@@ -210,36 +254,64 @@ function MentorEvents() {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-              // attendanceID: attendanceData.attendanceID,
-              // role: attendanceData.role,
-              // hobbyistID: attendanceData.hobbyistID,
-              // mentorID: attendanceData.mentorID,
-              // eventID: attendanceData.eventID,
-              role: attendanceData.role,
-              hobbyistFirstName: attendanceData.hobbyistFirstName,
-              hobbyistLastName: attendanceData.hobbyistLastName,
-              hobbyistPhoneNumber: attendanceData.hobbyistPhoneNumber,
-              mentorFirstName: attendanceData.mentorFirstName,
-              mentorLastName: attendanceData.mentorLastName,
-              mentorPhoneNumber: attendanceData.mentorPhoneNumber,
-              eventID: attendanceData.eventID,
-            }),
+            body: JSON.stringify(attendanceData),
           }
         );
-
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-
         const data = await response.json();
         alert("Attendance created successfully!");
-
-        // Clear form after successful submission
       } catch (error) {
         console.error("Error creating attendance:", error);
         alert("Error creating attendance. Please try again.");
       }
+      // try {
+      //   const response = await fetch(
+      //     "http://localhost:3001/mentor/createeventattendence",
+      //     {
+      //       method: "POST",
+      //       headers: {
+      //         "Content-Type": "application/json",
+      //       },
+      //       body: JSON.stringify({
+      //         // attendanceID: attendanceData.attendanceID,
+      //         // role: attendanceData.role,
+      //         // hobbyistID: attendanceData.hobbyistID,
+      //         // mentorID: attendanceData.mentorID,
+      //         // eventID: attendanceData.eventID,
+      //         // role: attendanceData.role,
+      //         // hobbyistFirstName: attendanceData.hobbyistFirstName,
+      //         // hobbyistLastName: attendanceData.hobbyistLastName,
+      //         // hobbyistPhoneNumber: attendanceData.hobbyistPhoneNumber,
+      //         // mentorFirstName: attendanceData.mentorFirstName,
+      //         // mentorLastName: attendanceData.mentorLastName,
+      //         // mentorPhoneNumber: attendanceData.mentorPhoneNumber,
+      //         // eventID: attendanceData.eventID,
+      //         role: "Mentor",
+      //         hobbyistFirstName: attendanceData.hobbyistFirstName,
+      //         hobbyistLastName: attendanceData.hobbyistLastName,
+      //         hobbyistPhoneNumber: attendanceData.hobbyistPhoneNumber,
+      //         mentorFirstName: "Steve",
+      //         mentorLastName: "Wozzy",
+      //         mentorPhoneNumber: "4259930293",
+      //         eventID: "800000002",
+      //       }),
+      //     }
+      //   );
+
+      //   if (!response.ok) {
+      //     throw new Error(`HTTP error! status: ${response.status}`);
+      //   }
+
+      //   const data = await response.json();
+      //   alert("Attendance created successfully!");
+
+      //   // Clear form after successful submission
+      // } catch (error) {
+      //   console.error("Error creating attendance:", error);
+      //   alert("Error creating attendance. Please try again.");
+      // }
     } else if (formType === "mentor") {
       console.log("Mentor Data Saved:", mentorData);
     }
@@ -365,7 +437,7 @@ function MentorEvents() {
       <hr />
 
       {/* Attendance Form */}
-      <h2>Create Attendance</h2>
+      <h2>Create Event Attendance</h2>
       <form
         onSubmit={(e) => handleSubmit(e, "attendance")}
         className="attendance-form"
@@ -450,13 +522,13 @@ function MentorEvents() {
             />
           </div>
           <div>
-            <label htmlFor="mentorPhonenumber" className="form-label">
+            <label htmlFor="mentorPhoneNumber" className="form-label">
               Mentor Phone Number:
             </label>
             <input
               type="text"
-              id="mentorPhonenumber"
-              name="mentorPhonenumber"
+              id="mentorPhoneNumber"
+              name="mentorPhoneNumber"
               value={attendanceData.mentorPhonenumber}
               onChange={handleAttendanceChange}
               className="form-input"
@@ -650,6 +722,69 @@ function MentorEvents() {
       ) : (
         <p>No events found for this eventName.</p>
       )}
+      <div>
+        <h2>
+          Get Event Attendance information by inputting Mentor firstName,
+          lastName, and phoneNumber
+        </h2>
+        <form>
+          <label htmlFor="firstname">First Name:</label>
+          <input
+            type="text"
+            id="firstname"
+            name="firstname"
+            value={complexquery1.firstname}
+            onChange={handleComplexQuery1Change}
+          />
+          <label htmlFor="lastname">Last Name:</label>
+          <input
+            type="text"
+            id="lastname"
+            name="lastname"
+            value={complexquery1.lastname}
+            onChange={handleComplexQuery1Change}
+          />
+          <label htmlFor="phonenumber">Phone Number:</label>
+          <input
+            type="text"
+            id="phonenumber"
+            name="phonenumber"
+            value={complexquery1.phonenumber}
+            onChange={handleComplexQuery1Change}
+          />
+          <button type="submit">Submit</button>
+        </form>
+        <pre>{JSON.stringify(complexquery1, null, 2)}</pre>
+        {complexquery1result &&
+        complexquery1result.data &&
+        Array.isArray(complexquery1result.data) &&
+        complexquery1result.data.length > 0 ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Mentor Name</th>
+                <th>Event Name</th>
+                <th>Total Attendees</th>
+                <th>Total Hobbyists</th>
+                <th>Total Mentors</th>
+              </tr>
+            </thead>
+            <tbody>
+              {complexquery1result.data.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.MentorName}</td>
+                  <td>{item.EventName}</td>
+                  <td>{item.TotalAttendees}</td>
+                  <td>{item.TotalHobbyists}</td>
+                  <td>{item.TotalMentors}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No events found for this phoneNumber, firstname, lastname.</p>
+        )}
+      </div>
     </div>
   );
 }

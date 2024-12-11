@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import "../css/Mentor.css";
+import { use } from "react";
 
 function Mentor() {
   // const baseUrl = "http://localhost:3000";
@@ -59,6 +60,22 @@ function Mentor() {
   // }, [mentorIDData.mentorID]); // Dependency on mentorIDData.mentorID
 
   // Handle Mentor Form Changes
+  const [skillNameResult, setSkillNameResult] = useState(null);
+  useEffect(() => {
+    const fetchSkillName = async () => {
+      try {
+        const response = await fetch(`http://localhost:3001/mentor/getskills`);
+        if (!response.ok) {
+          throw new Error("Skill Name not found");
+        }
+        const data = await response.json();
+        setSkillNameResult(data); // Set the result data when the fetch is successful
+      } catch (error) {
+        console.error("Error fetching skill name:", error.message);
+      }
+    };
+    fetchSkillName();
+  });
   const handleMentorChange = (e) => {
     const { name, value } = e.target;
     setMentorData({
@@ -328,62 +345,64 @@ function Mentor() {
       <pre className="preview-box">{JSON.stringify(hobbyistData, null, 2)}</pre>
 
       <hr /> */}
-      <h2>Delete Mentor</h2>
-      {/* Delete Mentor Form */}
-      <form
-        onSubmit={(e) => handleSubmit(e, "deleteMentor")}
-        className="mentor-form"
-      >
-        <div className="form-field">
-          <label htmlFor="name" className="form-label">
-            Mentor First Name:
-          </label>
-          <input
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={deleteMentorData.firstName}
-            onChange={handleDeleteMentorChange}
-            className="form-input"
-          />
-        </div>
-        <div className="form-field">
-          <label htmlFor="name" className="form-label">
-            Mentor Last Name:
-          </label>
-          <input
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={deleteMentorData.lastName}
-            onChange={handleDeleteMentorChange}
-            className="form-input"
-          />
-        </div>
+      <div>
+        <h2>Delete Mentor</h2>
+        {/* Delete Mentor Form */}
+        <form
+          onSubmit={(e) => handleSubmit(e, "deleteMentor")}
+          className="mentor-form"
+        >
+          <div className="form-field">
+            <label htmlFor="name" className="form-label">
+              Mentor First Name:
+            </label>
+            <input
+              type="text"
+              id="firstName"
+              name="firstName"
+              value={deleteMentorData.firstName}
+              onChange={handleDeleteMentorChange}
+              className="form-input"
+            />
+          </div>
+          <div className="form-field">
+            <label htmlFor="name" className="form-label">
+              Mentor Last Name:
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              name="lastName"
+              value={deleteMentorData.lastName}
+              onChange={handleDeleteMentorChange}
+              className="form-input"
+            />
+          </div>
 
-        <div className="form-field">
-          <label htmlFor="phonenumber" className="form-label">
-            Mentor Phone Number:
-          </label>
-          <input
-            type="text"
-            id="phonenumber"
-            name="phonenumber"
-            value={deleteMentorData.phonenumber}
-            onChange={handleDeleteMentorChange}
-            className="form-input"
-          />
-        </div>
+          <div className="form-field">
+            <label htmlFor="phonenumber" className="form-label">
+              Mentor Phone Number:
+            </label>
+            <input
+              type="text"
+              id="phonenumber"
+              name="phonenumber"
+              value={deleteMentorData.phonenumber}
+              onChange={handleDeleteMentorChange}
+              className="form-input"
+            />
+          </div>
 
-        <button type="submit" className="submit-button">
-          Delete Mentor Data
-        </button>
-      </form>
-      <h3>Delete Mentor Preview:</h3>
-      <pre className="preview-box">
-        {JSON.stringify(deleteMentorData, null, 2)}
-      </pre>
-      <hr />
+          <button type="submit" className="submit-button">
+            Delete Mentor Data
+          </button>
+        </form>
+        <h3>Delete Mentor Preview:</h3>
+        <pre className="preview-box">
+          {JSON.stringify(deleteMentorData, null, 2)}
+        </pre>
+        <hr />
+      </div>
       {/* <h2>GET information with Mentor ID</h2> */}
       {/* Mentor ID Form */}
       {/* <form
@@ -413,6 +432,32 @@ function Mentor() {
           <pre>{JSON.stringify(mentorResultData, null, 2)}</pre>
         </div>
       )} */}
+      <div>
+        <h2>View All Skills</h2>
+        {console.log(skillNameResult)}{" "}
+        {/* Log skillNameResult to check its structure */}
+        {skillNameResult &&
+        Array.isArray(skillNameResult.data) &&
+        skillNameResult.data.length > 0 ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Skill Name</th>
+              </tr>
+            </thead>
+            <tbody>
+              {skillNameResult.data.map((skill, index) => (
+                <tr key={index}>
+                  <td>{skill.skillsName}</td>{" "}
+                  {/* Accessing skillsName from each object */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No skills found.</p> // Fallback message if data is empty or not an array
+        )}
+      </div>
     </div>
   );
 }

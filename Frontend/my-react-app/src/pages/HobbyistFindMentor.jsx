@@ -62,6 +62,46 @@ export default function HobbyistFindMentor() {
     }
     fetchData();
   }, [skillName]);
+  const [mentorResult, setMentorResult] = useState(null);
+  useEffect(() => {
+    const fetchMentors = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/hobbyist/getallmentors`
+        );
+        if (!response.ok) {
+          throw new Error("mentor not found");
+        }
+        const data = await response.json();
+        setMentorResult(data); // Set the result data when the fetch is successful
+      } catch (error) {
+        console.error("Error fetching mentors:", error.message);
+      }
+    };
+    fetchMentors();
+  }, []);
+
+  const [
+    toptenmentorsbasedonrequestResult,
+    setToptenmentorsbasedonrequestResult,
+  ] = useState(null);
+  useEffect(() => {
+    const fetchMentors = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/hobbyist/toptenmentorsbasedonrequest`
+        );
+        if (!response.ok) {
+          throw new Error("mentor not found");
+        }
+        const data = await response.json();
+        setToptenmentorsbasedonrequestResult(data); // Set the result data when the fetch is successful
+      } catch (error) {
+        console.error("Error fetching mentors:", error.message);
+      }
+    };
+    fetchMentors();
+  }, []);
 
   useEffect(() => {
     async function fetchData() {
@@ -135,13 +175,7 @@ export default function HobbyistFindMentor() {
     fetchData();
   }, [schoolLocation.location, schoolLocation.school]);
 
-  // message,
-  // hobbyistFirstName,
-  // hobbyistLastName,
-  // hobbyistPhoneNumber,
-  // mentorFirstName,
-  // mentorLastName,
-  // mentorPhoneNumber,
+
   const [requestInputData, setRequestInputData] = useState({
     message: "",
     hobbyistFirstName: "",
@@ -232,6 +266,41 @@ export default function HobbyistFindMentor() {
     }
   };
 
+  const [
+    inputAllRequestByHobbyistInfoResult,
+    setinputAllRequestByHobbyistInfoResult,
+  ] = useState({
+    firstName: "",
+    lastName: "",
+    phonenumber: "",
+  }); // getAllRequestByHobbyistInfo
+  const handleinputAllRequestByHobbyistInfoResultChange = (e) => {
+    setinputAllRequestByHobbyistInfoResult({
+      ...inputAllRequestByHobbyistInfoResult,
+      [e.target.name]: e.target.value,
+    });
+  };
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/hobbyist/getallrequestbyhobbyistinfo/${inputAllRequestByHobbyistInfoResult.firstName}/${inputAllRequestByHobbyistInfoResult.lastName}/${inputAllRequestByHobbyistInfoResult.phonenumber}`
+        );
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setinputAllRequestByHobbyistInfoResult(data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    }
+    fetchData();
+  }, [
+    inputAllRequestByHobbyistInfoResult.firstName,
+    inputAllRequestByHobbyistInfoResult.lastName,
+    inputAllRequestByHobbyistInfoResult.phonenumber,
+  ]);
   return (
     <div>
       <div>
@@ -685,6 +754,115 @@ export default function HobbyistFindMentor() {
           <button type="submit">Create Endorsement</button>
         </form>
         <pre>{JSON.stringify(endorsementInputData, null, 2)}</pre>
+      </div>
+      <div>
+        {/* your here you were abel to create form and set it to usestae, then you need to call endpoint */}
+        <h2>View All Requests by Hobbyists</h2>
+
+        <form>
+          <label htmlFor="firstName">Hobbyist First Name:</label>
+          <input
+            type="text"
+            id="firstName"
+            name="firstName"
+            value={inputAllRequestByHobbyistInfoResult.firstName}
+            onChange={handleinputAllRequestByHobbyistInfoResultChange}
+          />
+          <label htmlFor="lastName">Hobbyist Last Name:</label>
+          <input
+            type="text"
+            id="lastName"
+            name="lastName"
+            value={inputAllRequestByHobbyistInfoResult.lastName}
+            onChange={handleinputAllRequestByHobbyistInfoResultChange}
+          />
+          <label htmlFor="phonenumber">Hobbyist Phone Number</label>
+          <input
+            type="text"
+            id="phonenumber"
+            name="phonenumber"
+            value={inputAllRequestByHobbyistInfoResult.phonenumber}
+            onChange={handleinputAllRequestByHobbyistInfoResultChange}
+          />
+          <button type="submit">View Requests</button>
+        </form>
+        <pre>
+          {JSON.stringify(inputAllRequestByHobbyistInfoResult, null, 2)}
+        </pre>
+      </div>
+      <div>
+        <h2>View All Mentors that have been assiged a skill</h2>
+        {console.log(mentorResult)}{" "}
+        {/* Log skillNameResult to check its structure */}
+        {mentorResult &&
+        Array.isArray(mentorResult.data) &&
+        mentorResult.data.length > 0 ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Mentors First Name</th>
+                <th>Mentors Location</th>
+                <th>Mentors phone Number</th>
+                <th>Mentors Skill name</th>
+                <th>Mentors experienceLevel</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mentorResult.data.map((mentor, index) => (
+                // CONCAT(Mentor.firstName, ' ', Mentor.lastName) AS MentorName,
+                // Mentor.location AS MentorLocation,
+                // Mentor.phoneNumber AS MentorPhoneNumber,
+                // Skills.skillsName AS SkillName,
+                // hasSkills.experienceLevel AS SkillLevel
+                <tr key={index}>
+                  <td>{mentor.MentorName}</td>
+                  <td>{mentor.MentorLocation}</td>{" "}
+                  <td>{mentor.MentorPhoneNumber}</td>{" "}
+                  <td>{mentor.SkillName}</td>
+                  <td>{mentor.SkillLevel}</td>{" "}
+                  {/* Accessing skillsName from each object */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No mentors found.</p> // Fallback message if data is empty or not an array
+        )}
+      </div>
+      <div>
+        <h2>Top 10 Mentors based on requests</h2>
+        {console.log(toptenmentorsbasedonrequestResult)}{" "}
+        {/* Log skillNameResult to check its structure */}
+        {toptenmentorsbasedonrequestResult &&
+        Array.isArray(toptenmentorsbasedonrequestResult.data) &&
+        mentorResult.data.length > 0 ? (
+          <table>
+            <thead>
+              <tr>
+                <th>Mentors First Name</th>
+                <th>Mentors phone Number</th>
+                <th>Total Requests</th>
+              </tr>
+            </thead>
+            <tbody>
+              {toptenmentorsbasedonrequestResult.data.map((mentor, index) => (
+                // CONCAT(Mentor.firstName, ' ', Mentor.lastName) AS MentorName,
+                // Mentor.location AS MentorLocation,
+                // Mentor.phoneNumber AS MentorPhoneNumber,
+                // Skills.skillsName AS SkillName,
+                // hasSkills.experienceLevel AS SkillLevel
+                <tr key={index}>
+                  <td>{mentor.MentorName}</td>
+                  <td>{mentor.phoneNumber}</td>
+                  <td>{mentor.TotalRequests}</td>
+                  {/* Accessing skillsName from each object */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <p>No mentors found.</p> // Fallback message if data is empty or not an array
+        )}
       </div>
     </div>
   );

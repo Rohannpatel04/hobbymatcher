@@ -3,7 +3,7 @@ const router = express.Router();
 const mentorController = require("../controller/mentorController");
 
 // /general
-router.get("/getskills", mentorController.getSkills); // Need to implement frontend
+router.get("/getskills", mentorController.getSkills);
 
 // /mentor
 router.post("/creatementor/", mentorController.createMentor);
@@ -14,7 +14,7 @@ router.delete(
 );
 
 // /mentor/findhobbyiest
-router.get("/getallhobbyists", mentorController.getHobbyists); // need to implement frontend
+router.get("/getallhobbyists", mentorController.getHobbyists);
 router.get(
   "/findhobbyiestbyname/:fname/:lname",
   mentorController.retrieveHobbyiestByName
@@ -55,11 +55,11 @@ router.get(
 
 // /mentor/events
 router.post("/createevent", mentorController.createEvent);
-router.post("/createeventattendence", mentorController.createEventAttendance); // Need to implement frontend
+router.post("/createeventattendence", mentorController.createEventAttendance);
 router.get(
   "/retrivevementoreventAttendance/:firstname/:lastname/:phonenumber",
   mentorController.getMentorEventAttendance
-); // Need to implement in frontend
+); // Complex Query
 router.get(
   "/retrieveeventinfobyid/:eventid",
   mentorController.retrieveEventInformationByID

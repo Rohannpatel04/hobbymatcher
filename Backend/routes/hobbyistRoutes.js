@@ -4,23 +4,19 @@ const hobbyistController = require("../controller/hobbyistController");
 
 // /Hobbyist
 router.post("/createhobbyist", hobbyistController.createHobbyist);
-router.delete(
-  "/deletehobbyist/:fname/:lname/:phonenumber",
-  hobbyistController.deleteHobbyist
-); // need to implement frontend
 
-// DONE DONE
 router.delete(
   "/deletehobbyist/:fname/:lname/:phonenumber",
   hobbyistController.deleteHobbyist
 );
 
 // /Hobbyist/Findmentor
-router.get("/getallmentors", hobbyistController.getMentors); // need to implement frontend
+router.get("/getallmentors", hobbyistController.getMentors);
 router.get(
   "/toptenmentorsbasedonrequest",
   hobbyistController.toptenmentorsbasedonrequest
-); // Need to implement frontend
+);
+
 router.get(
   "/getmentorendorsementsbyskill/:firstname/:lastname/:phonenumber",
   hobbyistController.getMentorEndorsements
@@ -28,29 +24,29 @@ router.get(
 router.get(
   "/getmentorsbyskills/:skill",
   hobbyistController.getMentorsWithSkills
-); // need to implement frontend
+);
 router.get(
   "/getmentorsbylocation/:location",
   hobbyistController.getMentorsFromLocation
-); // need to implement frontend
+);
 router.get(
   "/getmentorsbyskillslocation/:skill/:location",
   hobbyistController.getMentorsWithSkillsAndLocation
-); // need to implement frontend
+);
 router.get(
   "/getmentorsbyskillsschooling/:skill/:schooling",
   hobbyistController.getMentorsWithSkillsAndSchooling
-); // need to implement frontend
+);
 router.get(
   "/getmentorsbylocationschooling/:location/:schooling",
   hobbyistController.getMentorsFromLocationAndSchooling
-); // need to implement frontend
-router.post("/createrequest", hobbyistController.createRequest); // Need to fix front end
-router.post("/createendorsement", hobbyistController.createEndorsement); // need to implement frontend
+);
+router.post("/createrequest", hobbyistController.createRequest);
+router.post("/createendorsement", hobbyistController.createEndorsement);
 router.get(
   "/getallrequestbyhobbyistinfo/:fname/:lname/:phonenumber",
   hobbyistController.getAllRequestByHobbyistInfo
-); // Need to implement frontend
+);
 
 // /Hobbyist/Post
 router.get("/getAllPosts", hobbyistController.getAllPosts); // need to implement frontend
@@ -74,24 +70,24 @@ router.get(
 router.post("/createcomment", hobbyistController.createComment); // need to implement frontend
 
 // /Hobbyist/Event
-router.get("/getallevents", hobbyistController.getAllEvents); // need to implement frontend
-router.get("/gettopevents", hobbyistController.getTopEventPosts); // need to implement in the frontend
-router.get("/geteventsbyskill/:skillname", hobbyistController.getEventsBySkill); // need to implement in frontend
+router.get("/getallevents", hobbyistController.getAllEvents);
+router.get("/gettopevents", hobbyistController.getTopEventPosts);
+router.get("/geteventsbyskill/:skillname", hobbyistController.getEventsBySkill);
 router.get(
   "/geteventsbylocation/:location",
   hobbyistController.getEventsByLocation
-); // need to implement in frontend
+);
 router.get(
   "/geteventsbymentorschooling/:schooling",
   hobbyistController.getEventsByMentorSchooling
-); // need to implement in frontend
+);
 router.get(
   "/geteventsbyskilllocationschooling/:skillname/:location/:schooling",
   hobbyistController.getEventsBySkillLocationSchooling
-); // need to implement in frontend
+);
 router.get(
   "/geteventsbyhobbyist/:fname/:lname/:phonenumber",
   hobbyistController.getEventsByHobbyist
-); // need to implement in frontend
+);
 
 module.exports = router;

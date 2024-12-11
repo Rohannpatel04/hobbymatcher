@@ -122,6 +122,24 @@ function FindHobbyist() {
     allInputs.school,
   ]); // Dependency on school
 
+  const [allHobbyistResult, setAllHobbyistResult] = useState(null);
+  useEffect(() => {
+    const fetchHobbyists = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:3001/mentor/getallhobbyists`
+        );
+        if (!response.ok) {
+          throw new Error("Hobbyist Name not found");
+        }
+        const data = await response.json();
+        setAllHobbyistResult(data); // Set the result data when the fetch is successful
+      } catch (error) {
+        console.error("Error fetching hobbyist name:", error.message);
+      }
+    };
+    fetchHobbyists();
+  });
   // Handlers for individual forms
   const handleSchoolChange = (e) => setSchool(e.target.value);
   const handleLocationChange = (e) => setLocation(e.target.value);
@@ -369,6 +387,40 @@ function FindHobbyist() {
             <p>No hobbyists found for this inputs.</p>
           )}
         </form>
+      </div>
+      <div>
+        <h2>View All Hobbyists</h2>
+        {console.log(allHobbyistResult)}
+        {allHobbyistResult && Array.isArray(allHobbyistResult.data) && (
+          <table>
+            <thead>
+              <tr>
+                <th>Hobbyist First Name</th>
+                <th>Hobbyist Last Name</th>
+                <th>Schooling</th>
+                <th>Description</th>
+                <th>Email Address</th>
+                <th>Location</th>
+                <th>Phone Number</th>
+              </tr>
+            </thead>
+            <tbody>
+              {allHobbyistResult.data.map((hobbyist, index) => (
+                <tr key={index}>
+                  <td>{hobbyist.firstName}</td>
+                  <td>{hobbyist.lastName}</td>
+                  <td>{hobbyist.schooling}</td>
+                  <td>{hobbyist.description}</td>
+                  <td>{hobbyist.emailAddress}</td>
+                  <td>{hobbyist.location}</td>
+                  <td>{hobbyist.phoneNumber}</td>
+
+                  {/* Accessing skillsName from each object */}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   );
