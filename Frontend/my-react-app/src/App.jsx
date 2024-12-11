@@ -9,6 +9,7 @@ import MentorEvents from "./pages/MentorEvents";
 import Hobbyist from "./pages/Hobbyist";
 import HobbyistFindMentor from "./pages/HobbyistFindMentor";
 import HobbyistEvents from "./pages/HobbyistEvents";
+import HobbyistPost from "./pages/HobbyistPost";
 function App() {
   return (
     <Router>
@@ -22,6 +23,7 @@ function App() {
         <Route path="/mentor/events" element={<MentorEvents />} />
         <Route path="/hobbyist/findmentor" element={<HobbyistFindMentor />} />
         <Route path="/hobbyist/events" element={<HobbyistEvents />} />
+        <Route path="/hobbyist/post" element={<HobbyistPost />} />
       </Routes>
     </Router>
   );
