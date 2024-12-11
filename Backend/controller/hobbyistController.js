@@ -792,38 +792,69 @@ const getPostsBySkillLocationSchooling = async (req, res) => {
 const createComment = async (req, res) => {
   const {
     reviewContent,
-    postID,
+    mentorFName,
+    mentorLastName,
+    mentorPhoneNumber,
+    postContent,
     hobbyistFName,
     hobbyistLastName,
     hobbyistPhoneNumber,
   } = req.body;
 
-  const queryHobbyistID = `
-  SELECT hobbyistID 
-  FROM Hobbyist 
-  WHERE firstName = ? AND lastName = ? AND phoneNumber = ?;
-`;
+  // Step 1: Find the postID based on mentor information and post name
+  const queryPostID = `
+    SELECT Post.postID 
+    FROM Post
+    JOIN Mentor ON Post.mentorID = Mentor.mentorID
+    WHERE Mentor.firstName = ? 
+    AND Mentor.lastName = ? 
+    AND Mentor.phoneNumber = ?
+    AND Post.postContent = ?;
+  `;
+  
+  const [postResult] = await db.query(queryPostID, [
+    mentorFName,
+    mentorLastName,
+    mentorPhoneNumber,
+    postContent,
+  ]);
 
-  const [result] = await db.query(queryHobbyistID, [
+  if (postResult.length === 0) {
+    return res.status(404).send("Post not found for the given mentor and post name.");
+  }
+
+  const postID = postResult[0].postID;
+
+  // Step 2: Find the hobbyistID based on hobbyist information
+  const queryHobbyistID = `
+    SELECT hobbyistID 
+    FROM Hobbyist 
+    WHERE firstName = ? AND lastName = ? AND phoneNumber = ?;
+  `;
+
+  const [hobbyistResult] = await db.query(queryHobbyistID, [
     hobbyistFName,
     hobbyistLastName,
     hobbyistPhoneNumber,
   ]);
 
-  if (result.length === 0) {
+  if (hobbyistResult.length === 0) {
     return res.status(404).send("Hobbyist not found.");
   }
-  const hobbyistID = result[0].hobbyistID;
+  
+  const hobbyistID = hobbyistResult[0].hobbyistID;
 
-  const query = `
-      INSERT INTO Comment (commentID, reviewContent, postID, hobbyistID) 
-      VALUES (?, ?, ?, ?);
-  `;
-
-  const maxIdQuery = `SELECT MAX(commentID) AS maxId FROM comment;`;
+  // Step 3: Generate the commentID by querying the max commentID
+  const maxIdQuery = `SELECT MAX(commentID) AS maxId FROM Comment;`;
   const [maxIdResult] = await db.query(maxIdQuery);
   const commentID = (maxIdResult[0].maxId || 0) + 1;
 
+  // Step 4: Insert the new comment into the database
+  const query = `
+    INSERT INTO Comment (commentID, reviewContent, postID, hobbyistID) 
+    VALUES (?, ?, ?, ?);
+  `;
+  
   try {
     await db.query(query, [commentID, reviewContent, postID, hobbyistID]);
     res.status(201).send("Comment added successfully.");
@@ -832,6 +863,7 @@ const createComment = async (req, res) => {
     res.status(500).send("Failed to add comment.");
   }
 };
+
 
 const getHobbyistComments = async (req, res) => {
   try {
@@ -1181,6 +1213,7 @@ const getEventsByHobbyist = async (req, res) => {
 };
 
 module.exports = {
+  getHobbyistComments,
   getTopEventPosts,
   getAllEvents,
   getHobbyistComments,

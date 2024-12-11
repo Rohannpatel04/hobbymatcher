@@ -92,6 +92,9 @@ export default function Hobbyist() {
         <Link to="/hobbyist/findmentor" className="nav-button">
           Find Mentor
         </Link>
+        <Link to="/hobbyist/post" className="nav-button">
+          Find Post
+        </Link>
       </div>
       <div>
         <h2>Create Hobbyist</h2>
