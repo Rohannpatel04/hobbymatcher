@@ -272,9 +272,6 @@ export default function HobbyistFindMentor() {
                 <th>Mentor Email</th>
                 <th>Mentor Location</th>
                 <th>Mentor Phone Number</th>
-                <th>Endorsement EndorsementID</th>
-                <th>Endorsement HobbyistID</th>
-                <th>Endorsement SkillsID</th>
                 <th>Endorsement Date</th>
                 <th>Endorsement Comment</th>
                 <th>Skills SkillsName</th>
@@ -290,9 +287,6 @@ export default function HobbyistFindMentor() {
                   <td>{mentor.emailAddress}</td>
                   <td>{mentor.location}</td>
                   <td>{mentor.phoneNumber}</td>
-                  <td>{mentor.endorsementID}</td>
-                  <td>{mentor.hobbyistID}</td>
-                  <td>{mentor.skillsID}</td>
                   <td>{mentor.date}</td>
                   <td>{mentor.comment}</td>
                   <td>{mentor.skillsName}</td>
@@ -327,9 +321,6 @@ export default function HobbyistFindMentor() {
                 <th>Mentor Email</th>
                 <th>Mentor Location</th>
                 <th>Mentor Phone Number</th>
-                <th>Endorsement EndorsementID</th>
-                <th>Endorsement HobbyistID</th>
-                <th>Endorsement SkillsID</th>
                 <th>Endorsement Date</th>
                 <th>Endorsement Comment</th>
               </tr>
@@ -344,9 +335,6 @@ export default function HobbyistFindMentor() {
                   <td>{mentor.emailAddress}</td>
                   <td>{mentor.location}</td>
                   <td>{mentor.phoneNumber}</td>
-                  <td>{mentor.endorsementID}</td>
-                  <td>{mentor.hobbyistID}</td>
-                  <td>{mentor.skillsID}</td>
                   <td>{mentor.date}</td>
                   <td>{mentor.comment}</td>
                 </tr>
@@ -398,9 +386,6 @@ export default function HobbyistFindMentor() {
                 <th>Mentor Email</th>
                 <th>Mentor Location</th>
                 <th>Mentor Phone Number</th>
-                <th>Endorsement EndorsementID</th>
-                <th>Endorsement HobbyistID</th>
-                <th>Endorsement SkillsID</th>
                 <th>Endorsement Date</th>
                 <th>Endorsement Comment</th>
               </tr>
@@ -415,9 +400,6 @@ export default function HobbyistFindMentor() {
                   <td>{mentor.emailAddress}</td>
                   <td>{mentor.location}</td>
                   <td>{mentor.phoneNumber}</td>
-                  <td>{mentor.endorsementID}</td>
-                  <td>{mentor.hobbyistID}</td>
-                  <td>{mentor.skillsID}</td>
                   <td>{mentor.date}</td>
                   <td>{mentor.comment}</td>
                 </tr>
@@ -468,9 +450,6 @@ export default function HobbyistFindMentor() {
                 <th>Mentor Email</th>
                 <th>Mentor Location</th>
                 <th>Mentor Phone Number</th>
-                <th>Endorsement EndorsementID</th>
-                <th>Endorsement HobbyistID</th>
-                <th>Endorsement SkillsID</th>
                 <th>Endorsement Date</th>
                 <th>Endorsement Comment</th>
               </tr>
@@ -485,9 +464,6 @@ export default function HobbyistFindMentor() {
                   <td>{mentor.emailAddress}</td>
                   <td>{mentor.location}</td>
                   <td>{mentor.phoneNumber}</td>
-                  <td>{mentor.endorsementID}</td>
-                  <td>{mentor.hobbyistID}</td>
-                  <td>{mentor.skillsID}</td>
                   <td>{mentor.date}</td>
                   <td>{mentor.comment}</td>
                 </tr>
@@ -538,9 +514,6 @@ export default function HobbyistFindMentor() {
                 <th>Mentor Email</th>
                 <th>Mentor Location</th>
                 <th>Mentor Phone Number</th>
-                <th>Endorsement EndorsementID</th>
-                <th>Endorsement HobbyistID</th>
-                <th>Endorsement SkillsID</th>
                 <th>Endorsement Date</th>
                 <th>Endorsement Comment</th>
               </tr>
@@ -555,9 +528,6 @@ export default function HobbyistFindMentor() {
                   <td>{mentor.emailAddress}</td>
                   <td>{mentor.location}</td>
                   <td>{mentor.phoneNumber}</td>
-                  <td>{mentor.endorsementID}</td>
-                  <td>{mentor.hobbyistID}</td>
-                  <td>{mentor.skillsID}</td>
                   <td>{mentor.date}</td>
                   <td>{mentor.comment}</td>
                 </tr>
