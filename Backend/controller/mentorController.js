@@ -256,21 +256,21 @@ const retrieveAllHobbyistRequests = async (req, res) => {
   try {
     const [rows] = await db.execute(
       `SELECT 
-                Request.requestID, 
-                Request.status, 
-                Request.message, 
-                Request.hobbyistID, 
-                Request.mentorID, 
-                Mentor.firstName, 
-                Mentor.lastName
-             FROM 
-                Request
-             JOIN 
-                Mentor ON Request.mentorID = Mentor.mentorID
-             WHERE 
-                Mentor.firstName = ? 
-                AND Mentor.lastName = ? 
-                AND Mentor.phoneNumber = ?`,
+        Request.requestID,
+        CONCAT(Hobbyist.firstName, ' ', Hobbyist.lastName) AS HobbyistName,
+        Hobbyist.phoneNumber AS HobbyistPhoneNumber,
+        Request.status, 
+        Request.message
+      FROM 
+        Request
+      JOIN 
+        Mentor ON Request.mentorID = Mentor.mentorID
+      JOIN 
+        Hobbyist ON Request.hobbyistID = Hobbyist.hobbyistID
+      WHERE 
+        Mentor.firstName = ? 
+        AND Mentor.lastName = ? 
+        AND Mentor.phoneNumber = ?`,
       [fname, lname, phonenumber]
     );
 

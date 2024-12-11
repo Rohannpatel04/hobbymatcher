@@ -274,9 +274,6 @@ function MentorRequest() {
         </button>
       </form>
       <h3>Hobbyist Preview:</h3>
-      {/* <pre className="preview-box">
-        {JSON.stringify(mentorResultData, null, 2)}
-      </pre> */}
       {mentorResultData ? (
         <table className="mentor-result-table">
           <thead>
@@ -284,10 +281,8 @@ function MentorRequest() {
               <th>Request ID</th>
               <th>Status</th>
               <th>Message</th>
-              <th>Hobbyist ID</th>
-              <th>Mentor ID</th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Hobbyist Name</th>
+              <th>Hobbyist Phone Number</th>
             </tr>
           </thead>
           <tbody>
@@ -296,10 +291,8 @@ function MentorRequest() {
                 <td>{item.requestID}</td>
                 <td>{item.status}</td>
                 <td>{item.message}</td>
-                <td>{item.hobbyistID}</td>
-                <td>{item.mentorID}</td>
-                <td>{item.firstName}</td>
-                <td>{item.lastName}</td>
+                <td>{item.HobbyistName}</td>
+                <td>{item.HobbyistPhoneNumber}</td>
               </tr>
             ))}
           </tbody>
